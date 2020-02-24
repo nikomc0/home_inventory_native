@@ -1,17 +1,23 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const Item = () => {
+const Item = (props) => {
+	const item = props.children.item;
 	return (
 		<View style={styles.listItems}>
-			<Text>ITEM 1</Text>
+			<Text style={styles.itemStyle}>{item}</Text>
 		</View>
 	)
 }
 
 const styles = StyleSheet.create({
 	listItems: {
-		marginLeft: 15,
+	},
+	itemStyle: {
+		backgroundColor: '#fff',
+		padding: 10,
+		marginHorizontal: 15,
+		fontSize: 20,
 	}
 });
 

@@ -4,12 +4,16 @@ import ItemList from '../components/ItemList';
 
 const HomeScreen = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <ItemList />
     </View>
   );
 }
 
-const styles = StyleSheet.create ({});
+const styles = StyleSheet.create ({
+  container: {
+    flex: 1,
+  },
+});
 
 export default HomeScreen;
