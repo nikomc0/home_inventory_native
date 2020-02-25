@@ -1,36 +1,49 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, ScrollView, RefreshControl } from 'react-native'
 import { SimpleLineIcons } from '@expo/vector-icons'
 import Item from './Item';
 import hi from '../api/hi';
 
-const searchAPI = async () => {
-	const response = await hi.get('/items', {
-		// Not yet built in the HI API.
-		// params: {
-
-		// }
-	});
-	var list = response.data;
-	return list;
-};
-
-searchAPI();
-
 const ItemList = () => {
-	const [item, setItems] = useState("");
+	const [items, setItems] = useState("");
 	const [results, setResults] = useState([]);
-	
+	const [refreshing, setRefreshing] = React.useState(false);
+
+	function wait(timeout) {
+	  return new Promise(resolve => {
+	    setTimeout(resolve, timeout);
+	  });
+	}
+
+	const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    searchAPI();
+    wait(2000).then(() => setRefreshing(false));
+  }, [refreshing]);
+
+	const searchAPI = async () => {
+		const response = await hi.get('/items', {
+			// Not yet built in the HI API.
+			// params: {
+
+			// }
+		});
+		setItems(response.data);
+	};
+
 	return (
 		<View style={styles.listContainer}>
-			<View style={styles.listHeader}>
-				<SimpleLineIcons name="list" size={30}/>
-				<Text style={styles.headerText}>Items</Text>
-			</View>
+				<View style={styles.listHeader}>
+					<SimpleLineIcons name="list" size={30}/>
+					<Text style={styles.headerText}>Items</Text>
+				</View>
 
 			<View style={styles.listStyle}>
 				<FlatList
-					data={list}
+					data={items}
+					refreshControl={
+						<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+					}
 					keyExtractor={ item => item.item}
 					renderItem={({ item }) => {
 						return (
@@ -38,7 +51,6 @@ const ItemList = () => {
 						)
 					}}
 				/>
-				<Text>{list}</Text>
 			</View>
 
 			<View style={styles.footer}>

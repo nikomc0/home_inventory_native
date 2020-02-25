@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
 	itemStyle: {
 		backgroundColor: '#fff',
 		padding: 10,
+		marginTop: 10,
 		marginHorizontal: 15,
 		fontSize: 20,
 	}

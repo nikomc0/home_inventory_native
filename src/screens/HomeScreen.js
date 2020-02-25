@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, RefreshControl } from 'react-native'
 import ItemList from '../components/ItemList';
 
 const HomeScreen = () => {
