@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, ScrollView, RefreshControl } from 'react-native'
-import { SimpleLineIcons } from '@expo/vector-icons'
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, ScrollView, RefreshControl } from 'react-native';
+import { SimpleLineIcons } from '@expo/vector-icons';
 import Item from './Item';
 import hi from '../api/hi';
+// import useItems from '../hooks/useItems';
 
 const ItemList = () => {
 	const [items, setItems] = useState("");
-	const [results, setResults] = useState([]);
-	const [refreshing, setRefreshing] = React.useState(false);
+	// const [searchAPI, errorMessage, refreshing, onRefresh] = useItems();
+	const [refreshing, setRefreshing] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
 
 	function wait(timeout) {
 	  return new Promise(resolve => {
@@ -22,21 +24,31 @@ const ItemList = () => {
   }, [refreshing]);
 
 	const searchAPI = async () => {
-		const response = await hi.get('/items', {
-			// Not yet built in the HI API.
-			// params: {
+		console.log("Loaded");
+		try {
+			const response = await hi.get('/items', {
+				// Not yet built in the HI API.
+				// params: {
 
-			// }
-		});
-		setItems(response.data);
+				// }
+			});
+			setItems(response.data);
+		} catch (error) {
+			setErrorMessage('Something went wrong')
+		}
 	};
 
+	useEffect(() => {
+		searchAPI();
+	}, []);
 	return (
 		<View style={styles.listContainer}>
-				<View style={styles.listHeader}>
-					<SimpleLineIcons name="list" size={30}/>
-					<Text style={styles.headerText}>Items</Text>
-				</View>
+			<View style={styles.listHeader}>
+				<SimpleLineIcons name="list" size={30}/>
+
+				<Text style={styles.headerText}>Items</Text>
+			</View>
+				{errorMessage ? <Text>{errorMessage}</Text> : null}
 
 			<View style={styles.listStyle}>
 				<FlatList
@@ -47,7 +59,7 @@ const ItemList = () => {
 					keyExtractor={ item => item.item}
 					renderItem={({ item }) => {
 						return (
-							<Item>{item}</Item>
+							<Item item={item}/>
 						)
 					}}
 				/>
