@@ -3,11 +3,13 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl } fr
 import { SimpleLineIcons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
 import Item from '../components/Item';
+import NewItem from '../components/NewItem';
 import hi from '../api/hi';
 
 const HomeScreen = () => {
 	const [items, setItems] = useState("");
 	const [stores, setStores] = useState("");
+	const [newItem, setNewItem] = useState(null);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -61,6 +63,11 @@ const HomeScreen = () => {
 		}
 	};
 
+	const addItem = () => {
+		var value = <NewItem stores={stores}/>;
+		return setNewItem(value);
+	}
+
 	useEffect(() => {
 		getData();
 	}, []);
@@ -80,9 +87,10 @@ const HomeScreen = () => {
 					)
 				}}
 			/>
+    	{newItem}
 			<View style={styles.footer}>
 				<TouchableOpacity 
-					onPress={() => {console.log("Pressed")}}>
+					onPress={() => addItem()}>
 					<SimpleLineIcons style={styles.addItemButton} name="plus"/>	
 				</TouchableOpacity>
 			</View>
