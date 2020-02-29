@@ -1,61 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, ScrollView, RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import Item from './Item';
 import hi from '../api/hi';
-// import useItems from '../hooks/useItems';
 
-const ItemList = () => {
-	const [items, setItems] = useState("");
-	// const [searchAPI, errorMessage, refreshing, onRefresh] = useItems();
-	const [refreshing, setRefreshing] = useState(false);
-	const [errorMessage, setErrorMessage] = useState("");
+const ItemList = ( {data, store, results}) => {
+	const items = results;
+	const errorMessage = data.error;
 
-	function wait(timeout) {
-	  return new Promise(resolve => {
-	    setTimeout(resolve, timeout);
-	  });
-	}
-
-	const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    searchAPI();
-    wait(2000).then(() => setRefreshing(false));
-  }, [refreshing]);
-
-	const searchAPI = async () => {
-		console.log("Loaded");
-		try {
-			const response = await hi.get('/items', {
-				// Not yet built in the HI API.
-				// params: {
-
-				// }
-			});
-			setItems(response.data);
-		} catch (error) {
-			setErrorMessage('Something went wrong')
-		}
-	};
-
-	useEffect(() => {
-		searchAPI();
-	}, []);
 	return (
 		<View style={styles.listContainer}>
 			<View style={styles.listHeader}>
-				<SimpleLineIcons name="list" size={30}/>
-
-				<Text style={styles.headerText}>Items</Text>
+				<Text style={styles.headerText}>{store}</Text>
 			</View>
 				{errorMessage ? <Text>{errorMessage}</Text> : null}
 
 			<View style={styles.listStyle}>
 				<FlatList
 					data={items}
-					refreshControl={
-						<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-					}
 					keyExtractor={ item => item.item}
 					renderItem={({ item }) => {
 						return (
@@ -63,13 +25,6 @@ const ItemList = () => {
 						)
 					}}
 				/>
-			</View>
-
-			<View style={styles.footer}>
-				<TouchableOpacity 
-					onPress={() => {console.log("Pressed")}}>
-					<SimpleLineIcons style={styles.addItemButton} name="plus"/>	
-				</TouchableOpacity>
 			</View>
 		</View>
 	)
@@ -79,29 +34,24 @@ const styles = StyleSheet.create({
 	listContainer: {
 		flexDirection: 'column',
 		flex: 1,
+		paddingBottom: 10,
 	},
 	listHeader: {
 		flexDirection: "row",
 		alignItems: 'center',
 		justifyContent: 'center',
 		marginHorizontal: 15,
+		paddingTop: 15,
+		
 	},
 	listStyle: {
-		flex: 7,
 	},
 	headerText: {
 		flex: 1,
 		marginHorizontal: 15,
 		fontSize: 20,
-	},
-	footer: {
-		// backgroundColor: '#F0EEEE',
-		flex: 1
-	},
-	addItemButton: {
-		alignSelf: 'center',
-		fontSize: 50,
-	},
+		textTransform: 'capitalize',
+	}
 });
 
 export default ItemList;

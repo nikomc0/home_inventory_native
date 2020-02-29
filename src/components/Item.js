@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
 	},
 	items: {
 		flexDirection: 'row',
+		alignItems: 'center'
 	},
 	checkbox: {
 		flex: 1,
@@ -58,6 +59,7 @@ const styles = StyleSheet.create({
 	itemStyle: {
 		marginHorizontal: 5,
 		fontSize: 20,
+		textTransform: 'capitalize',
 	},
 	detailsStyle: {
 		color: "#858585",
