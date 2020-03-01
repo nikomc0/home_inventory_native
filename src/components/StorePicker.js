@@ -1,16 +1,34 @@
-import React from 'react';
-import { View, Text, Picker } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Picker, StyleSheet } from 'react-native';
 
-const StorePicker = ({ stores }) => {
+const StorePicker = ({ stores, toggle, setStore }) => {
+	const [item, setItem] = useState('');
+
 	return (
-		<View>
-			<Picker>
+			<Picker style={styles.pickerStyle}
+				selectedValue={item}
+				onValueChange={(itemValue, itemIndex) => {
+					setStore(itemValue);
+					toggle();
+				}}>
 				{stores.map((store, index) =>{
-					return (<Picker.Item key={store.id} label={store.store} value={store.store}/>)
+					return (
+						<Picker.Item 
+							style={styles.pickerItem} 
+							key={store.id} 
+							label={store.store} 
+							value={store.store}/>
+					)
 				})}
 			</Picker>
-		</View>
 	)
 }
+
+const styles = StyleSheet.create ({
+	pickerStyle: {
+	},
+	pickerItem: {
+	}
+})
 
 export default StorePicker;

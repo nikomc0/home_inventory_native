@@ -9,7 +9,8 @@ import hi from '../api/hi';
 const HomeScreen = () => {
 	const [items, setItems] = useState("");
 	const [stores, setStores] = useState("");
-	const [newItem, setNewItem] = useState(null);
+	const [newItemInput, showNewItemInput] = useState(false);
+	const [itemToAdd, setItemToAdd] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -63,9 +64,19 @@ const HomeScreen = () => {
 		}
 	};
 
+	const saveData = async (item, store) => {
+		try {
+			const response = await hi.post('/items', {
+				item: item,
+				store: store
+			});
+		} catch (error) {
+			setErrorMessage('Failed to Save Item')
+		}
+	}
+
 	const addItem = () => {
-		var value = <NewItem stores={stores}/>;
-		return setNewItem(value);
+		showNewItemInput(!newItemInput);
 	}
 
 	useEffect(() => {
@@ -83,15 +94,39 @@ const HomeScreen = () => {
 				keyExtractor={(store) => store.id}
 				renderItem={({ item }) => {
 					return (
-						<ItemList results={filterItemsByStore(item.store)} searchAPI={getData} data={items} error={errorMessage} store={item.store}/>
+						<ItemList 
+							results={filterItemsByStore(item.store)} 
+							searchAPI={getData} 
+							data={items} 
+							store={item.store}
+							error={errorMessage} 
+							/>
 					)
 				}}
 			/>
-    	{newItem}
+			
+			{ newItemInput ? <NewItem 
+					stores={stores}
+					save={saveData}
+					itemToAdd={itemToAdd}
+					onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
+					onItemSubmit={(newItem, store) => saveData(newItem, store)}
+					toggle={addItem}
+				/> : null
+			}
+			
 			<View style={styles.footer}>
 				<TouchableOpacity 
 					onPress={() => addItem()}>
-					<SimpleLineIcons style={styles.addItemButton} name="plus"/>	
+					{ newItemInput ? 
+						<SimpleLineIcons
+						style={styles.addItemButton}
+						name="close" />
+						:
+						<SimpleLineIcons 
+						style={styles.addItemButton} 
+						name="plus"/> 
+					}
 				</TouchableOpacity>
 			</View>
     </View>
