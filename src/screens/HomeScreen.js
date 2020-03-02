@@ -75,6 +75,14 @@ const HomeScreen = () => {
 		}
 	}
 
+	const deleteData = async (item) => {
+		try {
+			console.log(`Delete ${item.item} at ${item.store}`);
+		} catch (error){
+			setErrorMessage('Failed to Delete Item')
+		}
+	}
+
 	const addItem = () => {
 		showNewItemInput(!newItemInput);
 	}
@@ -97,6 +105,7 @@ const HomeScreen = () => {
 						<ItemList 
 							results={filterItemsByStore(item.store)} 
 							searchAPI={getData} 
+							deleteData={deleteData}
 							data={items} 
 							store={item.store}
 							error={errorMessage} 

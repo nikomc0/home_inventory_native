@@ -5,7 +5,7 @@ import Item from './Item';
 import hi from '../api/hi';
 
 
-const ItemList = ( {data, store, results}) => {
+const ItemList = ( {data, store, results, deleteData}) => {
 	const items = results;
 	const errorMessage = data.error;
 
@@ -30,7 +30,7 @@ const ItemList = ( {data, store, results}) => {
 					keyExtractor={ item => item.item}
 					renderItem={({ item }) => {
 						return (
-							<Item item={item} onSwipeLeft={onSwipeLeft} onSwipeRight={onSwipeRight}/>
+							<Item item={item} onSwipeLeft={onSwipeLeft} onSwipeRight={onSwipeRight} deleteItem={deleteData}/>
 						)
 					}}
 				/>

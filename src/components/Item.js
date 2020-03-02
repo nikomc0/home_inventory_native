@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
-const Item = ({ item, onSwipeLeft, onSwipeRight }) => {
+const Item = ({ item, onSwipeLeft, onSwipeRight, deleteItem }) => {
 	const [details, setDetails] = useState(false);
 	const [selected, setSelected] = useState(false);
 
@@ -21,10 +21,9 @@ const Item = ({ item, onSwipeLeft, onSwipeRight }) => {
 	}
 
 	const RightActions = () => {
-		console.log(item)
 		return (
 			<View style={styles.rightAction}>
-				<TouchableOpacity onPress={(item) => {console.log("Delete this item.", item.item)}}>
+				<TouchableOpacity onPress={() => deleteItem(item)}>
 					<Text style={styles.rightActionText}>Delete</Text>
 				</TouchableOpacity>
 			</View>
