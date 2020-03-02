@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
-const Item = ({ item }) => {
+const Item = ({ item, onSwipeLeft, onSwipeRight }) => {
 	const [details, setDetails] = useState(false);
 	const [selected, setSelected] = useState(false);
 
@@ -19,23 +20,36 @@ const Item = ({ item }) => {
 		setSelected(!selected);
 	}
 
+	const RightActions = () => {
+		console.log(item)
+		return (
+			<View style={styles.rightAction}>
+				<TouchableOpacity onPress={(item) => {console.log("Delete this item.", item.item)}}>
+					<Text style={styles.rightActionText}>Delete</Text>
+				</TouchableOpacity>
+			</View>
+		)
+	}
+
 	return (
-		<View style={styles.listItems}>
-			<TouchableOpacity
-				onPress={() => showDetails()}
-			>
-				<View style={styles.itemCard}>
-					<View style={styles.items}>
-						<TouchableOpacity onPress={() => select()}>
-							{ selected ? <MaterialCommunityIcons name="checkbox-marked-outline" style={styles.checkbox}/> : <MaterialCommunityIcons name="checkbox-blank-outline" style={styles.checkbox}/>}
+		<Swipeable
+			renderRightActions={RightActions}>
+			<View style={styles.itemCard}>
+					<View>
+						<TouchableOpacity
+							onPress={() => showDetails()}>
+								<View style={styles.items}>
+									<TouchableOpacity onPress={() => select()}>
+										{ selected ? <MaterialCommunityIcons name="checkbox-marked-outline" style={styles.checkbox}/> : <MaterialCommunityIcons name="checkbox-blank-outline" style={styles.checkbox}/>}
+									</TouchableOpacity>
+									<Text style={styles.itemStyle}>{item.qty}</Text>
+									<Text style={styles.itemStyle}>{item.item}</Text>
+								</View>
+								{ details ? <View>{detailsTemplate}</View> : null }
 						</TouchableOpacity>
-						<Text style={styles.itemStyle}>{item.qty}</Text>
-						<Text style={styles.itemStyle}>{item.item}</Text>
 					</View>
-					{ details ? <View>{detailsTemplate}</View> : null }
-				</View>
-			</TouchableOpacity>
-		</View>
+			</View>
+		</Swipeable>
 	)
 }
 
@@ -43,12 +57,10 @@ const styles = StyleSheet.create({
 	itemCard: {
 		backgroundColor: '#fff',
 		padding: 10,
-		marginTop: 10,
-		marginHorizontal: 15,
 	},
 	items: {
 		flexDirection: 'row',
-		alignItems: 'center'
+		alignItems: 'center',
 	},
 	checkbox: {
 		flex: 1,
@@ -63,6 +75,16 @@ const styles = StyleSheet.create({
 	},
 	detailsStyle: {
 		color: "#858585",
+		fontSize: 18,
+	},
+	rightAction: {
+		backgroundColor: "red",
+		justifyContent: 'center',
+	},
+	rightActionText: {
+		color: "#fff",
+		fontWeight: "600",
+		padding: 20,
 		fontSize: 18,
 	}
 });

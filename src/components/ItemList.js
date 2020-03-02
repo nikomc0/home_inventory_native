@@ -4,9 +4,18 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import Item from './Item';
 import hi from '../api/hi';
 
+
 const ItemList = ( {data, store, results}) => {
 	const items = results;
 	const errorMessage = data.error;
+
+	function onSwipeLeft (){
+
+	};
+
+	function onSwipeRight (){
+
+	}
 
 	return (
 		<View style={styles.listContainer}>
@@ -21,7 +30,7 @@ const ItemList = ( {data, store, results}) => {
 					keyExtractor={ item => item.item}
 					renderItem={({ item }) => {
 						return (
-							<Item item={item}/>
+							<Item item={item} onSwipeLeft={onSwipeLeft} onSwipeRight={onSwipeRight}/>
 						)
 					}}
 				/>
@@ -35,6 +44,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		flex: 1,
 		paddingBottom: 10,
+		marginHorizontal: 15,
 	},
 	listHeader: {
 		flexDirection: "row",
