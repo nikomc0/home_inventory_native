@@ -28,7 +28,7 @@ const HomeScreen = () => {
 
 	const filterItemsByStore = (store) => {
 		return items.items.filter(item => {
-			return item.store === store; 
+			return item.store.store === store; 
 		});
 	}
 
@@ -51,14 +51,14 @@ const HomeScreen = () => {
 
 	const getData = async () => {
 		try {
-			const response = await hi.get('/items', {
-				// Not yet built in the HI API.
-				// params: {
+			console.log("Fetching Data");
+			const response = await hi.get('/items');
+			
+			var stores = []
 
-				// }
-			});
+			items.items.forEach(x => stores.push(x.store))
 			setItems(response.data);
-			setStores(response.data.stores);
+			setStores(stores);
 		} catch (error) {
 			setErrorMessage('Something went wrong')
 		}
@@ -77,7 +77,8 @@ const HomeScreen = () => {
 
 	const deleteData = async (item) => {
 		try {
-			console.log(`Delete ${item.item} at ${item.store}`);
+			const response = await hi.delete(`/items/${item.id}`)
+			.then(getData());
 		} catch (error){
 			setErrorMessage('Failed to Delete Item')
 		}
