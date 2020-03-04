@@ -8,7 +8,7 @@ const Item = ({ item, onSwipeLeft, onSwipeRight, deleteItem }) => {
 	const [selected, setSelected] = useState(false);
 
 	const detailsTemplate = <View>
-			<Text style={styles.detailsStyle}>store: {item.store}</Text>
+			<Text style={styles.detailsStyle}>store: {item.store.store}</Text>
 			<Text style={styles.detailsStyle}>qty: {item.qty}</Text>
 		</View>
 
@@ -78,13 +78,15 @@ const styles = StyleSheet.create({
 	},
 	rightAction: {
 		backgroundColor: "red",
-		justifyContent: 'center',
+		justifyContent: 'center'
 	},
 	rightActionText: {
 		color: "#fff",
 		fontWeight: "600",
-		padding: 20,
+		paddingRight: 20,
+		paddingLeft: 20,
 		fontSize: 18,
+		alignSelf: 'center',
 	}
 });
 

@@ -25,9 +25,19 @@ const NewItem = ({ stores, save, itemToAdd, onItemChange, onItemSubmit, toggle }
 				}}/>
 			<TouchableOpacity onPress={togglePicker}>
 				<MaterialIcons style={styles.storeIcon} name="store"/>
-			{ picker ? <StorePicker stores={stores} setStore={selectedStore => {
-				setStore(selectedStore);
-			}} toggle={togglePicker}/> : null }
+				<TextInput style={styles.textInput}
+					placeholder="Add Store"
+					autoCapitalize={true}
+					value="BLAH"/>
+			{ picker ? <StorePicker 
+				stores={stores} 
+				setStore={selectedStore => {
+					setStore(selectedStore);
+					}} 
+				toggle={togglePicker}
+				/> 
+				: 
+				null }
 			</TouchableOpacity>
 		</View>
 	)
@@ -36,6 +46,7 @@ const NewItem = ({ stores, save, itemToAdd, onItemChange, onItemSubmit, toggle }
 const styles = StyleSheet.create ({
 	newItemView: {
 		backgroundColor: '#fff',
+		flexDirection: 'row',
 	},
 	textInput: {
 		fontSize: 20,
@@ -43,6 +54,7 @@ const styles = StyleSheet.create ({
 	},
 	storeIcon: {
 		fontSize: 30,
+		paddingLeft: 5,
 		color: '#A9A9A9',
 	},
 })

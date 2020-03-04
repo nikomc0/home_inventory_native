@@ -17,7 +17,7 @@ const HomeScreen = () => {
 	const onRefresh = React.useCallback(() => {
     setRefreshing(true);
    	getData();
-    wait(2000).then(() => setRefreshing(false));
+    wait(1000).then(() => setRefreshing(false));
   }, [refreshing]);
 
 	function wait(timeout) {
@@ -28,7 +28,7 @@ const HomeScreen = () => {
 
 	const filterItemsByStore = (store) => {
 		return items.items.filter(item => {
-			return item.store.store === store; 
+			return item.store.store === store.store; 
 		});
 	}
 
@@ -50,15 +50,15 @@ const HomeScreen = () => {
 	};
 
 	const getData = async () => {
+		var storesList = [];
 		try {
-			console.log("Fetching Data");
 			const response = await hi.get('/items');
-			
-			var stores = []
 
-			items.items.forEach(x => stores.push(x.store))
-			setItems(response.data);
-			setStores(stores);
+			if (response.data) {	
+				response.data.items.forEach(x => storesList.push(x.store));
+				setItems(response.data);
+				setStores(storesList);
+			}
 		} catch (error) {
 			setErrorMessage('Something went wrong')
 		}
@@ -70,6 +70,7 @@ const HomeScreen = () => {
 				item: item,
 				store: store
 			});
+			getData();
 		} catch (error) {
 			setErrorMessage('Failed to Save Item')
 		}
@@ -77,8 +78,8 @@ const HomeScreen = () => {
 
 	const deleteData = async (item) => {
 		try {
-			const response = await hi.delete(`/items/${item.id}`)
-			.then(getData());
+			const response = await hi.delete(`/items/${item.id}`);
+			getData();
 		} catch (error){
 			setErrorMessage('Failed to Delete Item')
 		}
@@ -104,7 +105,7 @@ const HomeScreen = () => {
 				renderItem={({ item }) => {
 					return (
 						<ItemList 
-							results={filterItemsByStore(item.store)} 
+							results={filterItemsByStore(item)} 
 							searchAPI={getData} 
 							deleteData={deleteData}
 							data={items} 

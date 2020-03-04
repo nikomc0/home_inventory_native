@@ -2,11 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import Item from './Item';
-import hi from '../api/hi';
-
 
 const ItemList = ( {data, store, results, deleteData}) => {
-	const items = results;
 	const errorMessage = data.error;
 
 	function onSwipeLeft (){
@@ -26,8 +23,8 @@ const ItemList = ( {data, store, results, deleteData}) => {
 
 			<View style={styles.listStyle}>
 				<FlatList
-					data={items}
-					keyExtractor={ item => item.item}
+					data={results}
+					keyExtractor={ item => item.item }
 					renderItem={({ item }) => {
 						return (
 							<Item item={item} onSwipeLeft={onSwipeLeft} onSwipeRight={onSwipeRight} deleteItem={deleteData}/>
@@ -58,7 +55,7 @@ const styles = StyleSheet.create({
 	},
 	headerText: {
 		flex: 1,
-		marginHorizontal: 15,
+		// marginHorizontal: 15,
 		fontSize: 20,
 		textTransform: 'capitalize',
 	}
