@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import Checkbox from './Checkbox';
 
 const Item = ({ item, onSwipeLeft, onSwipeRight, deleteItem }) => {
 	const [details, setDetails] = useState(false);
@@ -50,19 +51,15 @@ const Item = ({ item, onSwipeLeft, onSwipeRight, deleteItem }) => {
 		<Swipeable
 			renderRightActions={RightActions} ref={getItem}>
 			<View style={styles.itemCard}>
-					<View>
-						<TouchableOpacity
-							onPress={() => showDetails()}>
-								<View style={styles.items}>
-									<TouchableOpacity onPress={() => select()}>
-										{ selected ? <MaterialCommunityIcons name="checkbox-marked-outline" style={styles.checkbox}/> : <MaterialCommunityIcons name="checkbox-blank-outline" style={styles.checkbox}/>}
-									</TouchableOpacity>
-									<Text style={styles.itemStyle}>{item.qty}</Text>
-									<Text style={styles.itemStyle}>{item.item}</Text>
-								</View>
-								{ details ? <View>{detailsTemplate}</View> : null }
-						</TouchableOpacity>
-					</View>
+				<TouchableOpacity
+					onPress={() => showDetails()}>
+						<View style={styles.items}>
+							<Checkbox select={select} selected={selected}/>
+							<Text style={styles.itemStyle}>{item.qty}</Text>
+							<Text style={styles.itemStyle}>{item.item}</Text>
+						</View>
+						{ details ? <View>{detailsTemplate}</View> : null }
+				</TouchableOpacity>
 			</View>
 		</Swipeable>
 	)

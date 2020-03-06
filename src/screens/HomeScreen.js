@@ -51,15 +51,11 @@ const HomeScreen = () => {
 	};
 
 	const getData = async () => {
-		var storesList = [];
 		try {
+			var storesList = {};
 			const response = await hi.get('/items');
-
-			if (response.data) {	
-				response.data.items.forEach(x => storesList.push(x.store));
 				setItems(response.data);
-				setStores(storesList);
-			}
+				setStores(response.data.stores);
 		} catch (error) {
 			setErrorMessage('Something went wrong')
 		}
@@ -74,6 +70,7 @@ const HomeScreen = () => {
 					store: store
 				});
 				getData();
+				clearState();
 			} else {
 				setErrorMessage('Missing Values')
 			}
@@ -89,6 +86,11 @@ const HomeScreen = () => {
 		} catch (error){
 			setErrorMessage('Failed to Delete Item')
 		}
+	}
+
+	const clearState = () => {
+		setItemToAdd("");
+		setStoreToAdd("");
 	}
 
 	const addItem = () => {
@@ -107,7 +109,7 @@ const HomeScreen = () => {
 				refreshControl={
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}
-				keyExtractor={(store) => store.id}
+				keyExtractor={(store) => store.store}
 				renderItem={({ item }) => {
 					return (
 						<ItemList 
@@ -131,7 +133,10 @@ const HomeScreen = () => {
 					storeToAdd={storeToAdd}
 					onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
 					onStoreChange={(newStoreToAdd) => setStoreToAdd(newStoreToAdd)}
-					onItemSubmit={(newItem, store) => saveData(newItem, store)}
+					onItemSubmit={(newItem, store) => {
+						saveData(itemToAdd, storeToAdd);
+
+					}}
 					toggle={addItem}/> : null
 			}
 			
@@ -156,18 +161,15 @@ const HomeScreen = () => {
 const styles = StyleSheet.create ({
   container: {
   	flex: 1,
-  	backgroundColor: 'brown',
     flexDirection: 'column',
     justifyContent: 'flex-end',
   },
 	listStyle: {
-		backgroundColor: "orange",
 	},
 	newItemInput: {
 		flex: 2,
 	},
   footer: {
-  	backgroundColor: 'green',
 		paddingTop: 10,
 		paddingBottom: 25,
 	},

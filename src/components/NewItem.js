@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, TextInput, Picker, TouchableOpacity, KeyboardAvoidingView, ScrollView } from 'react-native';
-import { KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import { MaterialIcons } from '@expo/vector-icons';
 import StorePicker from './StorePicker';
+import Input from './ItemInput';
 
 const NewItem = ({ 
 	stores, save, itemToAdd, storeToAdd, onItemChange, onStoreChange, onItemSubmit, toggle }) => {
@@ -16,22 +16,13 @@ const NewItem = ({
 
 	return (
 		<KeyboardAvoidingView
-			style={{ }}
 			behavior='padding'
 			enabled
 			keyboardVerticalOffset={30}>
 			<ScrollView>
 				<View style={styles.newItemView}>
-					<TextInput style={styles.textInput} placeholder="Add Item"
-						autoCapitalize="none"
-						autoCorrect={true}
-						value={itemToAdd}
-						onChangeText={onItemChange}/>
-					<TextInput style={styles.textInput}
-						placeholder="New Store"
-						autoCapitalize="none"
-						value={storeToAdd}
-						onChangeText={onStoreChange}/>
+					<Input placeholder="New Item" value={itemToAdd} method={onItemChange}/>
+					<Input placeholder="New Store" value={storeToAdd} method={onStoreChange}/>
 				</View>
 				<View style={styles.storeInput}>	
 					<TouchableOpacity onPress={togglePicker}>
@@ -79,6 +70,7 @@ const styles = StyleSheet.create ({
 	submitButton: {
 		alignSelf: 'flex-end',
 		fontSize: 20,
+		marginHorizontal: 15,
 	}
 })
 

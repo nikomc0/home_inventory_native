@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import Item from './Item';
+import Input from './ItemInput';
 
 const ItemList = ( {data, store, results, deleteData}) => {
 	const errorMessage = data.error;
@@ -15,7 +16,8 @@ const ItemList = ( {data, store, results, deleteData}) => {
 			<View style={styles.listHeader}>
 				<Text style={styles.headerText}>{store}</Text>
 			</View>
-				{errorMessage ? <Text>{errorMessage}</Text> : null}
+			
+			{errorMessage ? <Text>{errorMessage}</Text> : null}
 
 			<View style={styles.listStyle}>
 				<FlatList
@@ -43,15 +45,13 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginHorizontal: 15,
 		paddingTop: 15,
-		
+		paddingBottom: 5,
 	},
 	listStyle: {
 	},
 	headerText: {
 		flex: 1,
-		// marginHorizontal: 15,
 		fontSize: 20,
 		textTransform: 'capitalize',
 	}
