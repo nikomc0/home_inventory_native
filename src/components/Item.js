@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 const Item = ({ item, onSwipeLeft, onSwipeRight, deleteItem }) => {
 	const [details, setDetails] = useState(false);
 	const [selected, setSelected] = useState(false);
+	const [itemToDelete, setItemToDelete] = useState('');
 
 	const detailsTemplate = <View>
 			<Text style={styles.detailsStyle}>store: {item.store.store}</Text>
@@ -20,19 +21,34 @@ const Item = ({ item, onSwipeLeft, onSwipeRight, deleteItem }) => {
 		setSelected(!selected);
 	}
 
-	const RightActions = () => {
+	const getItem = (item) => {
+		setItemToDelete(item);
+	}
+
+	const RightActions = (progress, dragX, ref) => {
+		const scale = dragX.interpolate({
+			inputRange: [-100, 0],
+			outputRange: [1, 0],
+			extrapolate: 'clamp'
+		})
+		
 		return (
-			<View style={styles.rightAction}>
-				<TouchableOpacity onPress={() => deleteItem(item)}>
-					<Text style={styles.rightActionText}>Delete</Text>
-				</TouchableOpacity>
-			</View>
+			<TouchableOpacity 
+				style={styles.rightAction} 
+				onPress={() => {
+					deleteItem(item);
+					itemToDelete.close();
+				}}>
+				<View>
+					<Animated.Text style={[styles.rightActionText, {transform: [{ scale }]}]}>Delete</Animated.Text>
+				</View>
+			</TouchableOpacity>
 		)
 	}
 
 	return (
 		<Swipeable
-			renderRightActions={RightActions}>
+			renderRightActions={RightActions} ref={getItem}>
 			<View style={styles.itemCard}>
 					<View>
 						<TouchableOpacity

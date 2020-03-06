@@ -6,10 +6,6 @@ import Item from './Item';
 const ItemList = ( {data, store, results, deleteData}) => {
 	const errorMessage = data.error;
 
-	function onSwipeLeft (){
-
-	};
-
 	function onSwipeRight (){
 
 	}
@@ -27,7 +23,7 @@ const ItemList = ( {data, store, results, deleteData}) => {
 					keyExtractor={ item => item.item }
 					renderItem={({ item }) => {
 						return (
-							<Item item={item} onSwipeLeft={onSwipeLeft} onSwipeRight={onSwipeRight} deleteItem={deleteData}/>
+							<Item item={item} onSwipeRight={onSwipeRight} deleteItem={deleteData}/>
 						)
 					}}
 				/>

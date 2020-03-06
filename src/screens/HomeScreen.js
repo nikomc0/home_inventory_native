@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl } from 'react-native'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
 import Item from '../components/Item';
@@ -11,6 +11,7 @@ const HomeScreen = () => {
 	const [stores, setStores] = useState("");
 	const [newItemInput, showNewItemInput] = useState(false);
 	const [itemToAdd, setItemToAdd] = useState("");
+	const [storeToAdd, setStoreToAdd] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -65,12 +66,17 @@ const HomeScreen = () => {
 	};
 
 	const saveData = async (item, store) => {
+		console.log({item, store})
 		try {
-			const response = await hi.post('/items', {
-				item: item,
-				store: store
-			});
-			getData();
+			if (item && store){		
+				const response = await hi.post('/items', {
+					item: item,
+					store: store
+				});
+				getData();
+			} else {
+				setErrorMessage('Missing Values')
+			}
 		} catch (error) {
 			setErrorMessage('Failed to Save Item')
 		}
@@ -116,14 +122,17 @@ const HomeScreen = () => {
 				}}
 			/>
 			
-			{ newItemInput ? <NewItem 
+			{ newItemInput ?
+				<NewItem 
+					style={styles.newItemInput}
 					stores={stores}
 					save={saveData}
 					itemToAdd={itemToAdd}
+					storeToAdd={storeToAdd}
 					onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
+					onStoreChange={(newStoreToAdd) => setStoreToAdd(newStoreToAdd)}
 					onItemSubmit={(newItem, store) => saveData(newItem, store)}
-					toggle={addItem}
-				/> : null
+					toggle={addItem}/> : null
 			}
 			
 			<View style={styles.footer}>
@@ -146,13 +155,19 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create ({
   container: {
-    flex: 1,
+  	flex: 1,
+  	backgroundColor: 'brown',
     flexDirection: 'column',
+    justifyContent: 'flex-end',
   },
 	listStyle: {
-
+		backgroundColor: "orange",
+	},
+	newItemInput: {
+		flex: 2,
 	},
   footer: {
+  	backgroundColor: 'green',
 		paddingTop: 10,
 		paddingBottom: 25,
 	},
