@@ -10,7 +10,7 @@ const Item = ({ item, onSwipeLeft, onSwipeRight, deleteItem }) => {
 	const [itemToDelete, setItemToDelete] = useState('');
 
 	const detailsTemplate = <View>
-			<Text style={styles.detailsStyle}>store: {item.store.store}</Text>
+			<Text style={styles.detailsStyle}>store: {item.store.name}</Text>
 			<Text style={styles.detailsStyle}>qty: {item.qty}</Text>
 		</View>
 

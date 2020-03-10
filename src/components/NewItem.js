@@ -6,8 +6,6 @@ import Input from './ItemInput';
 
 const NewItem = ({ 
 	stores, save, itemToAdd, storeToAdd, onItemChange, onStoreChange, onItemSubmit, toggle }) => {
-	const [item, setItem] = useState('');
-	const [store, setStore] = useState('');
 	const [picker, showPicker] = useState(false);
 
 	const togglePicker = () => {
@@ -31,7 +29,7 @@ const NewItem = ({
 								style={styles.storePicker}
 								stores={stores} 
 								setStore={selectedStore => {
-									setStore(selectedStore);
+									onStoreChange(selectedStore);
 									}} 
 								toggle={togglePicker}
 								/> : null }

@@ -28,8 +28,9 @@ const HomeScreen = () => {
 	}
 
 	const filterItemsByStore = (store) => {
+
 		return items.items.filter(item => {
-			return item.store.store === store.store; 
+			return item.store.name === store.name; 
 		});
 	}
 
@@ -109,7 +110,7 @@ const HomeScreen = () => {
 				refreshControl={
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}
-				keyExtractor={(store) => store.store}
+				keyExtractor={(store) => store.id}
 				renderItem={({ item }) => {
 					return (
 						<ItemList 
@@ -117,7 +118,7 @@ const HomeScreen = () => {
 							searchAPI={getData} 
 							deleteData={deleteData}
 							data={items} 
-							store={item.store}
+							store={item.name}
 							error={errorMessage} 
 							/>
 					)
