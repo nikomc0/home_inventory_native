@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl } from 'react-native'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
 import Item from '../components/Item';
@@ -11,13 +11,14 @@ const HomeScreen = () => {
 	const [stores, setStores] = useState("");
 	const [newItemInput, showNewItemInput] = useState(false);
 	const [itemToAdd, setItemToAdd] = useState("");
+	const [storeToAdd, setStoreToAdd] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
 
 	const onRefresh = React.useCallback(() => {
     setRefreshing(true);
    	getData();
-    wait(2000).then(() => setRefreshing(false));
+    wait(1000).then(() => setRefreshing(false));
   }, [refreshing]);
 
 	function wait(timeout) {
@@ -27,8 +28,9 @@ const HomeScreen = () => {
 	}
 
 	const filterItemsByStore = (store) => {
+
 		return items.items.filter(item => {
-			return item.store === store; 
+			return item.store.name === store.name; 
 		});
 	}
 
@@ -51,28 +53,45 @@ const HomeScreen = () => {
 
 	const getData = async () => {
 		try {
-			const response = await hi.get('/items', {
-				// Not yet built in the HI API.
-				// params: {
-
-				// }
-			});
-			setItems(response.data);
-			setStores(response.data.stores);
+			var storesList = {};
+			const response = await hi.get('/items');
+				setItems(response.data);
+				setStores(response.data.stores);
 		} catch (error) {
 			setErrorMessage('Something went wrong')
 		}
 	};
 
 	const saveData = async (item, store) => {
+		console.log({item, store})
 		try {
-			const response = await hi.post('/items', {
-				item: item,
-				store: store
-			});
+			if (item && store){		
+				const response = await hi.post('/items', {
+					item: item,
+					store: store
+				});
+				getData();
+				clearState();
+			} else {
+				setErrorMessage('Missing Values')
+			}
 		} catch (error) {
 			setErrorMessage('Failed to Save Item')
 		}
+	}
+
+	const deleteData = async (item) => {
+		try {
+			const response = await hi.delete(`/items/${item.id}`);
+			getData();
+		} catch (error){
+			setErrorMessage('Failed to Delete Item')
+		}
+	}
+
+	const clearState = () => {
+		setItemToAdd("");
+		setStoreToAdd("");
 	}
 
 	const addItem = () => {
@@ -95,24 +114,31 @@ const HomeScreen = () => {
 				renderItem={({ item }) => {
 					return (
 						<ItemList 
-							results={filterItemsByStore(item.store)} 
+							results={filterItemsByStore(item)} 
 							searchAPI={getData} 
+							deleteData={deleteData}
 							data={items} 
-							store={item.store}
+							store={item.name}
 							error={errorMessage} 
 							/>
 					)
 				}}
 			/>
 			
-			{ newItemInput ? <NewItem 
+			{ newItemInput ?
+				<NewItem 
+					style={styles.newItemInput}
 					stores={stores}
 					save={saveData}
 					itemToAdd={itemToAdd}
+					storeToAdd={storeToAdd}
 					onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
-					onItemSubmit={(newItem, store) => saveData(newItem, store)}
-					toggle={addItem}
-				/> : null
+					onStoreChange={(newStoreToAdd) => setStoreToAdd(newStoreToAdd)}
+					onItemSubmit={(newItem, store) => {
+						saveData(itemToAdd, storeToAdd);
+
+					}}
+					toggle={addItem}/> : null
 			}
 			
 			<View style={styles.footer}>
@@ -135,11 +161,14 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create ({
   container: {
-    flex: 1,
+  	flex: 1,
     flexDirection: 'column',
+    justifyContent: 'flex-end',
   },
 	listStyle: {
-
+	},
+	newItemInput: {
+		flex: 2,
 	},
   footer: {
 		paddingTop: 10,
