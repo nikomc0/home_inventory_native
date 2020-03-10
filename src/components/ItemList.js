@@ -11,10 +11,6 @@ const ItemList = ( {data, store, results, deleteData}) => {
 
 	}
 
-	useEffect(() => {
-		console.log(store)
-	}, []);
-
 	return (
 		<View style={styles.listContainer}>
 			<View style={styles.listHeader}>
@@ -26,7 +22,7 @@ const ItemList = ( {data, store, results, deleteData}) => {
 			<View style={styles.listStyle}>
 				<FlatList
 					data={results}
-					keyExtractor={ item => item.name }
+					keyExtractor={ item => item.id }
 					renderItem={({ item }) => {
 						return (
 							<Item item={item} onSwipeRight={onSwipeRight} deleteItem={deleteData}/>
