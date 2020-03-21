@@ -16,8 +16,8 @@ const StorePicker = ({ stores, toggle, setStore }) => {
 						<Picker.Item 
 							style={styles.pickerItem} 
 							key={store.id} 
-							label={store.store} 
-							value={store.store}/>
+							label={store.name} 
+							value={store.name}/>
 					)
 				})}
 			</Picker>

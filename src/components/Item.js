@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Checkbox from './Checkbox';
 
-const Item = ({ item, onSwipeLeft, onSwipeRight, deleteItem }) => {
+const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, deleteItem }) => {
+	const [show, setShow] = useState(true);
 	const [details, setDetails] = useState(false);
 	const [selected, setSelected] = useState(false);
+	const [itemCardStyle, setItemCardStyle] = useState(styles.itemCard);
 	const [itemToDelete, setItemToDelete] = useState('');
 
 	const detailsTemplate = <View>
-			<Text style={styles.detailsStyle}>store: {item.store.name}</Text>
+			{/*<Text style={styles.detailsStyle}>store: {item.store.name}</Text>*/}
 			<Text style={styles.detailsStyle}>qty: {item.qty}</Text>
 		</View>
 
@@ -20,10 +22,20 @@ const Item = ({ item, onSwipeLeft, onSwipeRight, deleteItem }) => {
 
 	function select(){
 		setSelected(!selected);
+		itemStyle();
+		setSelectedItem(item);
 	}
 
 	const getItem = (item) => {
 		setItemToDelete(item);
+	}
+
+	function itemStyle(){
+		if (itemCardStyle === styles.itemCard) {
+			setItemCardStyle(styles.itemCardSelected);
+		} else {
+			setItemCardStyle(styles.itemCard)
+		}
 	}
 
 	const RightActions = (progress, dragX, ref) => {
@@ -50,13 +62,13 @@ const Item = ({ item, onSwipeLeft, onSwipeRight, deleteItem }) => {
 	return (
 		<Swipeable
 			renderRightActions={RightActions} ref={getItem}>
-			<View style={styles.itemCard}>
+			<View style={itemCardStyle}>
 				<TouchableOpacity
 					onPress={() => showDetails()}>
 						<View style={styles.items}>
 							<Checkbox select={select} selected={selected}/>
 							<Text style={styles.itemStyle}>{item.qty}</Text>
-							<Text style={styles.itemStyle}>{item.item}</Text>
+							<Text style={styles.itemStyle}>{item.name}</Text>
 						</View>
 						{ details ? <View>{detailsTemplate}</View> : null }
 				</TouchableOpacity>
@@ -68,6 +80,10 @@ const Item = ({ item, onSwipeLeft, onSwipeRight, deleteItem }) => {
 const styles = StyleSheet.create({
 	itemCard: {
 		backgroundColor: '#fff',
+		padding: 10,
+	},
+	itemCardSelected: {
+		backgroundColor: '#e6e6e6',
 		padding: 10,
 	},
 	items: {
