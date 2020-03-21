@@ -1,23 +1,28 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect} from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
 import Item from '../components/Item';
 import NewItem from '../components/NewItem';
 import hi from '../api/hi';
+import { Context as ItemContext } from '../context/ItemContext';
+import { AppState } from 'react-native';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
+	const {state, getItems, addItem, editItem} = useContext(ItemContext);
+
 	const [items, setItems] = useState("");
 	const [stores, setStores] = useState("");
+	const [errorMessage, setErrorMessage] = useState("");
+
 	const [newItemInput, showNewItemInput] = useState(false);
 	const [itemToAdd, setItemToAdd] = useState("");
 	const [storeToAdd, setStoreToAdd] = useState("");
-	const [errorMessage, setErrorMessage] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
 
 	const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-   	getData();
+   	getItems();
     wait(1000).then(() => setRefreshing(false));
   }, [refreshing]);
 
@@ -27,58 +32,45 @@ const HomeScreen = () => {
 	  });
 	}
 
-	const filterItemsByStore = (store) => {
+	const filterStoresByCompleted = () => {
+		if (state.stores){
+			return state.stores.filter((store) => {
+				return onlyNotCompleted(store.items);
+			})
+		}
+	}
 
-		return items.items.filter(item => {
-			return item.store.name === store.name; 
+	const filterItemsByStore = (store) => {
+		return state.items.filter(item => {
+			if (!item.complete) {
+				return item.store_info.name === store; 
+			}
 		});
 	}
 
-	function alphabetical(key){
-		var sortOrder = 1;
-
-		if (key[0] === "-") {
-			sortOrder = -1;
-			key = key.substr(1);
-		}
-
-		return function (a, b){
-			if (sortOrder == -1) {
-				return b[key].localeCompare(a[key]);	
-			} else {
-				return a[key].localeCompare(b[key]);
+	const onlyNotCompleted = (arr) => {
+		for (let item of arr) {
+			if (!item.complete) {
+				return item;
 			}
-		}
-	};
-
-	const getData = async () => {
-		try {
-			var storesList = {};
-			const response = await hi.get('/items');
-				setItems(response.data);
-				setStores(response.data.stores);
-		} catch (error) {
-			setErrorMessage('Something went wrong')
-		}
-	};
-
-	const saveData = async (item, store) => {
-		console.log({item, store})
-		try {
-			if (item && store){		
-				const response = await hi.post('/items', {
-					item: item,
-					store: store
-				});
-				getData();
-				clearState();
-			} else {
-				setErrorMessage('Missing Values')
-			}
-		} catch (error) {
-			setErrorMessage('Failed to Save Item')
 		}
 	}
+	// function alphabetical(key){
+	// 	var sortOrder = 1;
+
+	// 	if (key[0] === "-") {
+	// 		sortOrder = -1;
+	// 		key = key.substr(1);
+	// 	}
+
+	// 	return function (a, b){
+	// 		if (sortOrder == -1) {
+	// 			return b[key].localeCompare(a[key]);	
+	// 		} else {
+	// 			return a[key].localeCompare(b[key]);
+	// 		}
+	// 	}
+	// };
 
 	const deleteData = async (item) => {
 		try {
@@ -94,30 +86,37 @@ const HomeScreen = () => {
 		setStoreToAdd("");
 	}
 
-	const addItem = () => {
+	const newItem = () => {
 		showNewItemInput(!newItemInput);
 	}
 
+	const setSelectedItem = (item) => {
+		item.complete = !item.complete;
+		editItem(item);
+		onRefresh();
+	}
+
 	useEffect(() => {
-		getData();
+		getItems();
+		console.log(state.complete);
 	}, []);
 
   return (
     <View style={styles.container}>
 			<FlatList
 				style={styles.listStyle} 
-				data={stores}
+				data={state.stores}
 				refreshControl={
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}
-				keyExtractor={(store) => store.id}
+				keyExtractor={ store => store.id}
 				renderItem={({ item }) => {
 					return (
 						<ItemList 
-							results={filterItemsByStore(item)} 
-							searchAPI={getData} 
+							results={filterItemsByStore(item.name)}  
 							deleteData={deleteData}
-							data={items} 
+							data={item.items}
+							setSelectedItem={setSelectedItem} 
 							store={item.name}
 							error={errorMessage} 
 							/>
@@ -128,22 +127,21 @@ const HomeScreen = () => {
 			{ newItemInput ?
 				<NewItem 
 					style={styles.newItemInput}
-					stores={stores}
-					save={saveData}
+					stores={state.stores}
 					itemToAdd={itemToAdd}
 					storeToAdd={storeToAdd}
 					onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
 					onStoreChange={(newStoreToAdd) => setStoreToAdd(newStoreToAdd)}
 					onItemSubmit={(newItem, store) => {
-						saveData(itemToAdd, storeToAdd);
-
+						addItem(itemToAdd, storeToAdd);
+						clearState();
 					}}
-					toggle={addItem}/> : null
+					toggle={newItem}/> : null
 			}
 			
 			<View style={styles.footer}>
 				<TouchableOpacity 
-					onPress={() => addItem()}>
+					onPress={newItem}>
 					{ newItemInput ? 
 						<SimpleLineIcons
 						style={styles.addItemButton}

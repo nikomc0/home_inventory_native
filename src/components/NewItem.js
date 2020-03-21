@@ -5,7 +5,7 @@ import StorePicker from './StorePicker';
 import Input from './ItemInput';
 
 const NewItem = ({ 
-	stores, save, itemToAdd, storeToAdd, onItemChange, onStoreChange, onItemSubmit, toggle }) => {
+	stores, itemToAdd, storeToAdd, onItemChange, onStoreChange, onItemSubmit, toggle }) => {
 	const [picker, showPicker] = useState(false);
 
 	const togglePicker = () => {

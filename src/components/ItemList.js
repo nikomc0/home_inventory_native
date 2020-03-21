@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import Item from './Item';
 import Input from './ItemInput';
 
-const ItemList = ( {data, store, results, deleteData}) => {
+const ItemList = ( {data, store, results, setSelectedItem, deleteData}) => {
+
 	const errorMessage = data.error;
 
 	function onSwipeRight (){
-
 	}
-
+	useEffect(() => {
+		// console.log({results});
+	}, []);
 	return (
 		<View style={styles.listContainer}>
 			<View style={styles.listHeader}>
@@ -22,10 +24,10 @@ const ItemList = ( {data, store, results, deleteData}) => {
 			<View style={styles.listStyle}>
 				<FlatList
 					data={results}
-					keyExtractor={ item => item.id }
+					keyExtractor={ (item) => item.id }
 					renderItem={({ item }) => {
 						return (
-							<Item item={item} onSwipeRight={onSwipeRight} deleteItem={deleteData}/>
+							<Item item={item} onSwipeRight={onSwipeRight} deleteItem={deleteData} setSelectedItem={setSelectedItem}/>
 						)
 					}}
 				/>
