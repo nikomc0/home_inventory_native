@@ -59,6 +59,9 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, deleteItem }) 
 		)
 	}
 
+	useEffect(() => {
+		// console.log(item)
+	});
 	return (
 		<Swipeable
 			renderRightActions={RightActions} ref={getItem}>
