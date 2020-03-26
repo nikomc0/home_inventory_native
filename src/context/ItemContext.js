@@ -36,8 +36,6 @@ const getItems = dispatch => {
 		try {
 			const response = await hi.get('/items');
 			dispatch({ type: 'get_items', payload: response.data })
-
-			
 		} catch (error) {
 			console.log(error);
 		}
@@ -53,6 +51,8 @@ const addItem = dispatch => {
 					store: store
 				});
 			}
+			// debugger;
+			getItems();
 		} catch (error) {
 			console.log(error)
 		}

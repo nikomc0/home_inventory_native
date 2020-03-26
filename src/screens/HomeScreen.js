@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl } fr
 import { SimpleLineIcons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
 import Item from '../components/Item';
-import NewItem from '../components/NewItem';
+import NewItemModal from '../components/NewItemModal';
 import hi from '../api/hi';
 import { Context as ItemContext } from '../context/ItemContext';
 import { AppState } from 'react-native';
@@ -74,12 +74,11 @@ const HomeScreen = ({ navigation }) => {
 	const setSelectedItem = (item) => {
 		item.complete = !item.complete;
 		editItem(item);
-		onRefresh();
 	}
 
 	useEffect(() => {
 		getItems();
-		console.log(state)
+		// console.log(state)
 	}, []);
 
   return (
@@ -105,7 +104,7 @@ const HomeScreen = ({ navigation }) => {
 			/>
 			
 			{ newItemInput ?
-				<NewItem 
+				<NewItemModal 
 					style={styles.newItemInput}
 					stores={state.stores}
 					itemToAdd={itemToAdd}
@@ -115,6 +114,7 @@ const HomeScreen = ({ navigation }) => {
 					onItemSubmit={(newItem, store) => {
 						addItem(itemToAdd, storeToAdd);
 						clearState();
+						getItems();
 					}}
 					toggle={newItem}/> : null
 			}

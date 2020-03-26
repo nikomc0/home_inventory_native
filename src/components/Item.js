@@ -16,6 +16,37 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, deleteItem }) 
 			<Text style={styles.detailsStyle}>qty: {item.qty}</Text>
 		</View>
 
+	const emptyItem = <View></View>
+	const newItem = <Swipeable style={styles.mainItem}
+			renderRightActions={RightActions} ref={getItem}>
+			<View style={itemCardStyle}>
+				<TouchableOpacity
+					onPress={() => showDetails()}>
+						<View style={styles.items}>
+							<Checkbox select={select} selected={selected}/>
+							<Text style={styles.itemStyle}>{null}</Text>
+							<Text style={styles.itemStyle}>{null}</Text>
+						</View>
+						{ details ? <View>{detailsTemplate}</View> : null }
+				</TouchableOpacity>
+			</View>
+		</Swipeable>
+
+	const activeItem = 	<Swipeable style={styles.mainItem}
+			renderRightActions={RightActions} ref={getItem}>
+			<View style={itemCardStyle}>
+				<TouchableOpacity
+					onPress={() => showDetails()}>
+						<View style={styles.items}>
+							<Checkbox select={select} selected={selected}/>
+							<Text style={styles.itemStyle}>{item.qty}</Text>
+							<Text style={styles.itemStyle}>{item.name}</Text>
+						</View>
+						{ details ? <View>{detailsTemplate}</View> : null }
+				</TouchableOpacity>
+			</View>
+		</Swipeable>
+
 	function showDetails(){
 		setDetails(!details);
 	}
@@ -59,28 +90,15 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, deleteItem }) 
 		)
 	}
 
-	useEffect(() => {
-		// console.log(item)
-	});
 	return (
-		<Swipeable
-			renderRightActions={RightActions} ref={getItem}>
-			<View style={itemCardStyle}>
-				<TouchableOpacity
-					onPress={() => showDetails()}>
-						<View style={styles.items}>
-							<Checkbox select={select} selected={selected}/>
-							<Text style={styles.itemStyle}>{item.qty}</Text>
-							<Text style={styles.itemStyle}>{item.name}</Text>
-						</View>
-						{ details ? <View>{detailsTemplate}</View> : null }
-				</TouchableOpacity>
-			</View>
-		</Swipeable>
+		selected ? emptyItem : activeItem
 	)
 }
 
 const styles = StyleSheet.create({
+	mainItem: {
+		display: 'none',
+	},
 	itemCard: {
 		backgroundColor: '#fff',
 		padding: 10,
