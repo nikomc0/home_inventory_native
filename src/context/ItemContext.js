@@ -51,6 +51,8 @@ const addItem = dispatch => {
 					store: store
 				});
 			}
+			// debugger;
+			getItems();
 		} catch (error) {
 			console.log(error)
 		}

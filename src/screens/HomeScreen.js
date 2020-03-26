@@ -3,16 +3,13 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl } fr
 import { SimpleLineIcons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
 import Item from '../components/Item';
-import NewItem from '../components/NewItem';
+import NewItemModal from '../components/NewItemModal';
 import hi from '../api/hi';
 import { Context as ItemContext } from '../context/ItemContext';
 import { AppState } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
 	const {state, getItems, addItem, editItem} = useContext(ItemContext);
-
-	const [items, setItems] = useState("");
-	const [stores, setStores] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 
 	const [newItemInput, showNewItemInput] = useState(false);
@@ -55,22 +52,6 @@ const HomeScreen = ({ navigation }) => {
 			}
 		}
 	}
-	// function alphabetical(key){
-	// 	var sortOrder = 1;
-
-	// 	if (key[0] === "-") {
-	// 		sortOrder = -1;
-	// 		key = key.substr(1);
-	// 	}
-
-	// 	return function (a, b){
-	// 		if (sortOrder == -1) {
-	// 			return b[key].localeCompare(a[key]);	
-	// 		} else {
-	// 			return a[key].localeCompare(b[key]);
-	// 		}
-	// 	}
-	// };
 
 	const deleteData = async (item) => {
 		try {
@@ -93,12 +74,11 @@ const HomeScreen = ({ navigation }) => {
 	const setSelectedItem = (item) => {
 		item.complete = !item.complete;
 		editItem(item);
-		onRefresh();
 	}
 
 	useEffect(() => {
 		getItems();
-		console.log(state.complete);
+		// console.log(state)
 	}, []);
 
   return (
@@ -118,14 +98,13 @@ const HomeScreen = ({ navigation }) => {
 							data={item.items}
 							setSelectedItem={setSelectedItem} 
 							store={item.name}
-							error={errorMessage} 
 							/>
 					)
 				}}
 			/>
 			
 			{ newItemInput ?
-				<NewItem 
+				<NewItemModal 
 					style={styles.newItemInput}
 					stores={state.stores}
 					itemToAdd={itemToAdd}
@@ -135,6 +114,7 @@ const HomeScreen = ({ navigation }) => {
 					onItemSubmit={(newItem, store) => {
 						addItem(itemToAdd, storeToAdd);
 						clearState();
+						getItems();
 					}}
 					toggle={newItem}/> : null
 			}

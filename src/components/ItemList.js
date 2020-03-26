@@ -6,7 +6,7 @@ import Input from './ItemInput';
 
 const ItemList = ( {data, store, results, setSelectedItem, deleteData}) => {
 
-	const errorMessage = data.error;
+	// const errorMessage = data.error;
 
 	function onSwipeRight (){
 	}
@@ -18,8 +18,6 @@ const ItemList = ( {data, store, results, setSelectedItem, deleteData}) => {
 			<View style={styles.listHeader}>
 				<Text style={styles.headerText}>{store}</Text>
 			</View>
-			
-			{errorMessage ? <Text>{errorMessage}</Text> : null}
 
 			<View style={styles.listStyle}>
 				<FlatList
