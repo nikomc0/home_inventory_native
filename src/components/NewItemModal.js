@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, StyleSheet, TextInput, Picker, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Picker, TouchableOpacity, KeyboardAvoidingView, Modal, ScrollView, Dimensions } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import StorePicker from './StorePicker';
 import Input from './ItemInput';
@@ -12,38 +12,45 @@ const NewItemModal = ({ stores, itemToAdd, storeToAdd, onItemChange, onStoreChan
 	}
 
 	return (
-				<Modal
-					animationType="slide"
-					transparent={true}
-					presentationStyle="overFullScreen">
-					<View style={styles.newItemView}>
-						<View>
-							<Input placeholder="New Item" value={itemToAdd} method={onItemChange}/>
-							<Input placeholder="New Store" value={storeToAdd} method={onStoreChange}/>
+			<KeyboardAvoidingView
+				behavior='padding'
+				enabled
+				keyboardVerticalOffset={30}>
+				<ScrollView>
+					<Modal
+						animationType="slide"
+						transparent={true}
+						presentationStyle="overFullScreen">
+						<View style={styles.newItemView}>
+							<View>
+								<Input placeholder="New Item" value={itemToAdd} method={onItemChange}/>
+								<Input placeholder="New Store" value={storeToAdd} method={onStoreChange}/>
+							</View>
+							<View style={styles.storeInput}>	
+								<TouchableOpacity onPress={togglePicker}>
+									<MaterialIcons style={styles.storeIcon} name="store"/>
+										{ picker ? <StorePicker 
+											style={styles.storePicker}
+											stores={stores} 
+											setStore={selectedStore => {
+												onStoreChange(selectedStore);
+												}} 
+											toggle={togglePicker}
+											/> : null }
+								</TouchableOpacity>
+							
+								<TouchableOpacity
+									onPress={() => {
+										onItemSubmit(itemToAdd, storeToAdd);
+										toggle();
+									}}>
+									<Text style={styles.submitButton}>Done</Text>
+								</TouchableOpacity>
+							</View>
 						</View>
-						<View style={styles.storeInput}>	
-							<TouchableOpacity onPress={togglePicker}>
-								<MaterialIcons style={styles.storeIcon} name="store"/>
-									{ picker ? <StorePicker 
-										style={styles.storePicker}
-										stores={stores} 
-										setStore={selectedStore => {
-											onStoreChange(selectedStore);
-											}} 
-										toggle={togglePicker}
-										/> : null }
-							</TouchableOpacity>
-						
-							<TouchableOpacity
-								onPress={() => {
-									onItemSubmit(itemToAdd, storeToAdd);
-									toggle();
-								}}>
-								<Text style={styles.submitButton}>Done</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</Modal>
+					</Modal>
+				</ScrollView>
+			</KeyboardAvoidingView>
 	)
 }
 
@@ -52,7 +59,7 @@ const {height, width} = Dimensions.get('window');
 const styles = StyleSheet.create ({
 	newItemView: {
 		backgroundColor: '#fff',
-		marginTop: height * .40,
+		marginTop: height * .90,
 		shadowColor: "#000",
 		shadowOffset: {
 			width: 0,
