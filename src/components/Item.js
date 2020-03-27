@@ -32,9 +32,7 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, deleteItem }) 
 			</View>
 		</Swipeable>
 
-	const activeItem = 	<Swipeable style={styles.mainItem}
-			renderRightActions={RightActions} ref={getItem}>
-			<View style={itemCardStyle}>
+	const activeItem = 	<View style={itemCardStyle}>
 				<TouchableOpacity
 					onPress={() => showDetails()}>
 						<View style={styles.items}>
@@ -45,7 +43,6 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, deleteItem }) 
 						{ details ? <View>{detailsTemplate}</View> : null }
 				</TouchableOpacity>
 			</View>
-		</Swipeable>
 
 	function showDetails(){
 		setDetails(!details);
@@ -91,7 +88,8 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, deleteItem }) 
 	}
 
 	return (
-		selected ? emptyItem : activeItem
+		selected ? emptyItem : <Swipeable style={styles.mainItem}
+			renderRightActions={RightActions} ref={getItem}>{activeItem}</Swipeable>
 	)
 }
 
