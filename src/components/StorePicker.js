@@ -11,7 +11,7 @@ const StorePicker = ({ stores, toggle, setStore }) => {
 					setStore(itemValue);
 					toggle();
 				}}>
-				{stores.map((store, index) =>{
+				{stores.map((store, index) => {
 					return (
 						<Picker.Item 
 							style={styles.pickerItem} 

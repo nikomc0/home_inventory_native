@@ -12,33 +12,34 @@ const NewItemModal = ({ stores, itemToAdd, storeToAdd, onItemChange, onStoreChan
 	}
 
 	return (
-			<KeyboardAvoidingView
-				behavior='padding'
-				enabled
-				keyboardVerticalOffset={30}>
-				<ScrollView>
+				<KeyboardAvoidingView
+					behavior='padding'
+					enabled
+					keyboardVerticalOffset={20}>
+					<ScrollView>
 					<Modal
 						animationType="slide"
 						transparent={true}
 						presentationStyle="overFullScreen">
 						<View style={styles.newItemView}>
-							<View>
-								<Input placeholder="New Item" value={itemToAdd} method={onItemChange}/>
-								<Input placeholder="New Store" value={storeToAdd} method={onStoreChange}/>
-							</View>
+
+									<View>
+										<Input placeholder="New Item" value={itemToAdd} method={onItemChange}/>
+										<Input placeholder="New Store" value={storeToAdd} method={onStoreChange}/>
+									</View>
+									<TouchableOpacity onPress={togglePicker}>
+										<MaterialIcons style={styles.storeIcon} name="store"/>
+											{ picker ? <StorePicker 
+												style={styles.storePicker}
+												stores={stores} 
+												setStore={selectedStore => {
+													onStoreChange(selectedStore);
+													}} 
+												toggle={togglePicker}
+												/> : null }
+									</TouchableOpacity>
+
 							<View style={styles.storeInput}>	
-								<TouchableOpacity onPress={togglePicker}>
-									<MaterialIcons style={styles.storeIcon} name="store"/>
-										{ picker ? <StorePicker 
-											style={styles.storePicker}
-											stores={stores} 
-											setStore={selectedStore => {
-												onStoreChange(selectedStore);
-												}} 
-											toggle={togglePicker}
-											/> : null }
-								</TouchableOpacity>
-							
 								<TouchableOpacity
 									onPress={() => {
 										onItemSubmit(itemToAdd, storeToAdd);
@@ -49,8 +50,8 @@ const NewItemModal = ({ stores, itemToAdd, storeToAdd, onItemChange, onStoreChan
 							</View>
 						</View>
 					</Modal>
-				</ScrollView>
-			</KeyboardAvoidingView>
+					</ScrollView>
+				</KeyboardAvoidingView>
 	)
 }
 
@@ -59,7 +60,7 @@ const {height, width} = Dimensions.get('window');
 const styles = StyleSheet.create ({
 	newItemView: {
 		backgroundColor: '#fff',
-		marginTop: height * .90,
+		marginTop: height * .42,
 		shadowColor: "#000",
 		shadowOffset: {
 			width: 0,
