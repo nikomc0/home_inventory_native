@@ -43,7 +43,7 @@ const getItems = dispatch => {
 }
 
 const addItem = dispatch => {
-	return async (item, store) => {
+	return async (item, store, callback) => {
 		try {
 			if (item && store){		
 				const response = await hi.post('/items', {
@@ -51,8 +51,6 @@ const addItem = dispatch => {
 					store: store
 				});
 			}
-			// debugger;
-			getItems();
 		} catch (error) {
 			console.log(error)
 		}

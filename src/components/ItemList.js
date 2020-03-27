@@ -10,9 +10,7 @@ const ItemList = ( {data, store, results, setSelectedItem, deleteData}) => {
 
 	function onSwipeRight (){
 	}
-	useEffect(() => {
-		// console.log({results});
-	}, []);
+
 	return (
 		<View style={styles.listContainer}>
 			<View style={styles.listHeader}>

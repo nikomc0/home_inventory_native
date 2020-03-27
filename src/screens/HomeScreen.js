@@ -56,7 +56,7 @@ const HomeScreen = ({ navigation }) => {
 	const deleteData = async (item) => {
 		try {
 			const response = await hi.delete(`/items/${item.id}`);
-			getData();
+			getItems();
 		} catch (error){
 			setErrorMessage('Failed to Delete Item')
 		}
@@ -71,6 +71,12 @@ const HomeScreen = ({ navigation }) => {
 		showNewItemInput(!newItemInput);
 	}
 
+	const submit = () => {
+		addItem(itemToAdd, storeToAdd);
+		clearState();
+		onRefresh();
+	}
+
 	const setSelectedItem = (item) => {
 		item.complete = !item.complete;
 		editItem(item);
@@ -78,7 +84,6 @@ const HomeScreen = ({ navigation }) => {
 
 	useEffect(() => {
 		getItems();
-		// console.log(state)
 	}, []);
 
   return (
@@ -98,7 +103,7 @@ const HomeScreen = ({ navigation }) => {
 							data={item.items}
 							setSelectedItem={setSelectedItem} 
 							store={item.name}
-							/>
+						/>
 					)
 				}}
 			/>
@@ -111,11 +116,7 @@ const HomeScreen = ({ navigation }) => {
 					storeToAdd={storeToAdd}
 					onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
 					onStoreChange={(newStoreToAdd) => setStoreToAdd(newStoreToAdd)}
-					onItemSubmit={(newItem, store) => {
-						addItem(itemToAdd, storeToAdd);
-						clearState();
-						getItems();
-					}}
+					onItemSubmit={submit}
 					toggle={newItem}/> : null
 			}
 			
