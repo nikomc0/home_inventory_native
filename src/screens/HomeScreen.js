@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect} from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
+import React, { useContext, useState, useEffect} from 'react';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl, ScrollView } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
 import Item from '../components/Item';
@@ -9,25 +9,11 @@ import { Context as ItemContext } from '../context/ItemContext';
 import { AppState } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
-	const {state, getItems, addItem, editItem} = useContext(ItemContext);
+	const {state, getItems, addItem, editItem, newItem} = useContext(ItemContext);
 	const [errorMessage, setErrorMessage] = useState("");
 
 	const [newItemInput, showNewItemInput] = useState(false);
-	const [itemToAdd, setItemToAdd] = useState("");
-	const [storeToAdd, setStoreToAdd] = useState("");
 	const [refreshing, setRefreshing] = useState(false);
-
-	const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-   	getItems();
-    wait(1000).then(() => setRefreshing(false));
-  }, [refreshing]);
-
-	function wait(timeout) {
-	  return new Promise(resolve => {
-	    setTimeout(resolve, timeout);
-	  });
-	}
 
 	const filterStoresByCompleted = () => {
 		if (state.stores){
@@ -57,24 +43,19 @@ const HomeScreen = ({ navigation }) => {
 		try {
 			const response = await hi.delete(`/items/${item.id}`);
 			getItems();
+			// onRefresh();
 		} catch (error){
 			setErrorMessage('Failed to Delete Item')
 		}
 	}
 
+	const deleteUnassignedData = (item) => {
+		console.log(item);
+	}
+
 	const clearState = () => {
 		setItemToAdd("");
 		setStoreToAdd("");
-	}
-
-	const newItem = () => {
-		showNewItemInput(!newItemInput);
-	}
-
-	const submit = () => {
-		addItem(itemToAdd, storeToAdd);
-		clearState();
-		onRefresh();
 	}
 
 	const setSelectedItem = (item) => {
@@ -87,42 +68,43 @@ const HomeScreen = ({ navigation }) => {
 	}, []);
 
   return (
-    <View style={styles.container}>
+  	<View style={styles.container}>
+			{ state.unassigned && state.unassigned.length > 0 ? 
+				<ItemList 
+					data={state.unassigned}
+					deleteData={deleteUnassignedData}
+					// itemToAdd={itemToAdd}
+					// storeToAdd={storeToAdd}
+					onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
+					onStoreChange={(newStoreToAdd) => {
+						setStoreToAdd(newStoreToAdd);
+					}}
+					// onItemSubmit={submit}
+					withDetails={true}
+				/> : null
+			}
 			<FlatList
 				style={styles.listStyle} 
 				data={state.stores}
-				refreshControl={
-					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-				}
 				keyExtractor={ store => store.id}
 				renderItem={({ item }) => {
 					return (
 						<ItemList 
-							results={filterItemsByStore(item.name)}  
+							data={filterItemsByStore(item.name)}  
 							deleteData={deleteData}
-							data={item.items}
 							setSelectedItem={setSelectedItem} 
+							// onStoreChange={setStoreToAdd}
 							store={item.name}
 						/>
 					)
 				}}
 			/>
 			
-			{ newItemInput ?
-				<NewItemModal 
-					style={styles.newItemInput}
-					stores={state.stores}
-					itemToAdd={itemToAdd}
-					storeToAdd={storeToAdd}
-					onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
-					onStoreChange={(newStoreToAdd) => setStoreToAdd(newStoreToAdd)}
-					onItemSubmit={submit}
-					toggle={newItem}/> : null
-			}
-			
 			<View style={styles.footer}>
 				<TouchableOpacity 
-					onPress={newItem}>
+					onPress={() => {
+						newItem();
+					}}>
 					{ newItemInput ? 
 						<SimpleLineIcons
 						style={styles.addItemButton}

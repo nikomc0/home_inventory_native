@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Picker, TouchableOpacity, KeyboardAvoidingView, Modal, ScrollView, Dimensions } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import StorePicker from './StorePicker';
 import Input from './ItemInput';
 
 const NewItemModal = ({ stores, itemToAdd, storeToAdd, onItemChange, onStoreChange, onItemSubmit, toggle }) => {
@@ -22,22 +21,21 @@ const NewItemModal = ({ stores, itemToAdd, storeToAdd, onItemChange, onStoreChan
 						transparent={true}
 						presentationStyle="overFullScreen">
 						<View style={styles.newItemView}>
-
-									<View>
-										<Input placeholder="New Item" value={itemToAdd} method={onItemChange}/>
-										<Input placeholder="New Store" value={storeToAdd} method={onStoreChange}/>
-									</View>
-									<TouchableOpacity onPress={togglePicker}>
-										<MaterialIcons style={styles.storeIcon} name="store"/>
-											{ picker ? <StorePicker 
-												style={styles.storePicker}
-												stores={stores} 
-												setStore={selectedStore => {
-													onStoreChange(selectedStore);
-													}} 
-												toggle={togglePicker}
-												/> : null }
-									</TouchableOpacity>
+							<View>
+								<Input placeholder="New Item" value={itemToAdd} method={onItemChange}/>
+								<Input placeholder="New Store" value={storeToAdd} method={onStoreChange}/>
+							</View>
+							<TouchableOpacity onPress={togglePicker}>
+								<MaterialIcons style={styles.storeIcon} name="store"/>
+									{ picker ? <StorePicker 
+										style={styles.storePicker}
+										stores={stores} 
+										setStore={selectedStore => {
+											onStoreChange(selectedStore);
+											}} 
+										toggle={togglePicker}
+										/> : null }
+							</TouchableOpacity>
 
 							<View style={styles.storeInput}>	
 								<TouchableOpacity
@@ -81,8 +79,6 @@ const styles = StyleSheet.create ({
 		fontSize: 30,
 		paddingLeft: 5,
 		color: '#A9A9A9',
-	},
-	storePicker: {
 	},
 	submitButton: {
 		alignSelf: 'flex-end',

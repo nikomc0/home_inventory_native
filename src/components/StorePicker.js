@@ -25,10 +25,7 @@ const StorePicker = ({ stores, toggle, setStore }) => {
 }
 
 const styles = StyleSheet.create ({
-	pickerStyle: {
-	},
-	pickerItem: {
-	}
+
 })
 
 export default StorePicker;

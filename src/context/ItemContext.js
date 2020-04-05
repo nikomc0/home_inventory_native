@@ -4,11 +4,13 @@ import hi from '../api/hi';
 const itemReducer = (state, action) => {
 	switch (action.type) {
 		case 'get_items':
-			const data = action.payload;
+			state = action.payload;
+
 			var complete = [];
 			var incomplete = [];
+			var unassigned = [];
 
-			data.items.filter(item => {
+			state.items.filter(item => {
 				if (item.complete) {
 					complete.push(item);
 				} else {
@@ -16,16 +18,23 @@ const itemReducer = (state, action) => {
 				}
 			})
 
-			data.complete = complete;
-			data.incomplete = incomplete;
+			state.complete = complete;
+			state.incomplete = incomplete;
 
-			return data;
-		case 'mark_complete':
-			if (state.completed) {
-				return [...state.completed, action.payload];
+			if (state.unassigned && state.unassigned.length > 0) {
+				state.unassigned.map((item)=>{unassigned.push(item)})
 			} else {
-				return state.completed = action.payload;
+				state.unassigned = unassigned;
 			}
+
+			return state;
+			
+		case 'new_item':
+			action.payload.id = (state.unassigned.length + 1).toString();
+			state.unassigned = [...state.unassigned, action.payload];
+			state = {...state};
+			return state;
+
 		default:
 			return state;
 	}
@@ -57,13 +66,9 @@ const addItem = dispatch => {
 	}
 }
 
-const deleteData = dispatch => {
-	async (item) => {
-		try {
-			const response = await hi.delete(`/items/${item.id}`);
-		} catch (error){
-			// setErrorMessage('Failed to Delete Item')
-		}
+const deleteItem = dispatch => {
+	return async (item) => {
+		const response = await hi.delete(`/items/${item.id}`, { item });
 	}
 }
 
@@ -71,14 +76,33 @@ const editItem = dispatch => {
 	return async (item) => {
 		try {
 			const response = await hi.put(`/items/${item.id}`, { item });
+			console.log(response.data);
 		} catch (error) {
 			console.log("Unable to edit item.");
 		}
 	}
 }
 
+const newItem = dispatch => {
+	return () => {
+		dispatch({ 
+			type: 'new_item', 
+			payload: {
+				id: '',
+				name: 'New Item',
+				qty: '1',
+				store_info: {
+					id: '1',
+				 	name:'Unassigned'
+				}, 
+				complete: false
+			}
+		});
+	}
+}
+
 export const { Context, Provider } = createDataContext(
 	itemReducer, 
-	{getItems, addItem, editItem}, 
+	{getItems, addItem, editItem, newItem, deleteItem}, 
 	[]
 );

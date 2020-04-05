@@ -4,9 +4,7 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import Item from './Item';
 import Input from './ItemInput';
 
-const ItemList = ( {data, store, results, setSelectedItem, deleteData}) => {
-
-	// const errorMessage = data.error;
+const ItemList = ( {data, store, results, setSelectedItem, deleteData, withDetails, onStoreChange}) => {
 
 	function onSwipeRight (){
 	}
@@ -19,11 +17,19 @@ const ItemList = ( {data, store, results, setSelectedItem, deleteData}) => {
 
 			<View style={styles.listStyle}>
 				<FlatList
-					data={results}
+					data={data}
 					keyExtractor={ (item) => item.id }
 					renderItem={({ item }) => {
 						return (
-							<Item item={item} onSwipeRight={onSwipeRight} deleteItem={deleteData} setSelectedItem={setSelectedItem}/>
+							<Item 
+								item={item} 
+								onSwipeRight={onSwipeRight} 
+								deleteItem={deleteData} 
+								setSelectedItem={setSelectedItem} 
+								withDetails={withDetails}
+								setStore={(selectedStore) => {
+									onStoreChange(selectedStore);
+								}}/>
 						)
 					}}
 				/>
@@ -35,8 +41,8 @@ const ItemList = ( {data, store, results, setSelectedItem, deleteData}) => {
 const styles = StyleSheet.create({
 	listContainer: {
 		flexDirection: 'column',
-		flex: 1,
-		paddingBottom: 10,
+		// flex: 1,
+		paddingBottom: 5,
 		marginHorizontal: 15,
 	},
 	listHeader: {
