@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextInput, View, StyleSheet } from 'react-native';
 
-const Input = ({ placeholder, value, method, item }) => {
+const Input = ({ placeholder, value, method, item, onEndEditing }) => {
 	const [holder, setHolder] = useState("");
 
 	const getPlaceholder = () => {
@@ -20,9 +20,11 @@ const Input = ({ placeholder, value, method, item }) => {
 		<View style={styles.items}>
 			<TextInput 
 				style={styles.itemStyle}
+				autoCapitalize='words'
 				placeholder={holder}
 				value={value}
-				onChangeText={method}/>
+				onChangeText={method}
+				onEndEditing={onEndEditing}/>
 		</View>
 	)
 }
@@ -33,9 +35,9 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	itemStyle: {
+		flex: 1,
 		fontSize: 20,
 		textTransform: 'capitalize',
-		padding: 10,
 	},
 })
 
