@@ -76,7 +76,6 @@ const editItem = dispatch => {
 	return async (item) => {
 		try {
 			const response = await hi.put(`/items/${item.id}`, { item });
-			console.log(response.data);
 		} catch (error) {
 			console.log("Unable to edit item.");
 		}
