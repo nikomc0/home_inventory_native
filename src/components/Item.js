@@ -32,7 +32,8 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 	function select() {
 		setSelected(!selected);
 		itemStyle('select');
-		setSelectedItem(item);
+		item.complete = !item.complete;
+		editItem(item).then(getItems);
 	}
 
 	const onItemChange = (newItemToAdd) => {
@@ -159,7 +160,7 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 					onPress={() => {
 						submit();
 					}}>
-					<Text style={styles.detailsText}>Done</Text>
+					<Text style={styles.detailsSubmitText}>Done</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -186,49 +187,71 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 			</TouchableOpacity>
 		)
 	}
-	const activeItem = 
-		<View 
-			style={itemCardStyle}>
-			<TouchableOpacity
-				onPress={() => {
-					itemStyle('fancy_item');
-					showDetails();
-				}}>
-					<View style={styles.items}>
-						<Checkbox select={select} selected={selected}/>
-						<Text style={styles.itemStyle}>{item.qty}</Text>
-						<Text style={styles.itemStyle}>{item.name}</Text>
-					</View>
-			</TouchableOpacity>
+
+	const itemWithDetails = 
+		<View>
+			<View style={styles.items}>
+				{ item.complete ? 
+					<Checkbox select={select} selected={true}/> 
+					:
+					<Checkbox select={select} selected={false}/>
+				}
+				<Text style={styles.itemStyle}>{item.qty}</Text>
+				<Input placeholder={item.name} value={itemToAdd} method={onItemChange} />
+			</View>
+			{ detailsTemplate }
+		</View>;
+
+	const defaultItem = 
+		<View style={styles.items}>
+			{ item.complete ? 
+				<Checkbox select={select} selected={true}/> 
+				:
+				<Checkbox select={select} selected={false}/>
+			}
+			<Text style={styles.itemStyle}>{item.qty}</Text>
+			<Text style={styles.itemStyle}>{item.name}</Text>
 		</View>
 
-	const activeItemWithDetails = 
+	const activeItem = 
 		<View 
-			style={itemCardStyle}
+			style={item.complete ? styles.itemCardSelected : itemCardStyle}
 			details={details}>
 			<TouchableOpacity
 				onPress={() => {
 					itemStyle('fancy_item');
 					showDetails();
 				}}>
-					<View style={styles.items}>
-						<Checkbox select={select} selected={selected}/>
-						<Text style={styles.itemStyle}>{item.qty}</Text>
-						<Input placeholder={item.name} value={itemToAdd} method={onItemChange} />
-					</View>
-					<View>{detailsTemplate}</View>
+				{ details ? itemWithDetails : defaultItem }
 			</TouchableOpacity>
 		</View>
 
-	useEffect(() => {
-		// console.log(state)
-	}, [])
+	// TO DO: Confirm safe to remove.
+	// const activeItemWithDetails = 
+	// 	<View 
+	// 		style={itemCardStyle}
+	// 		details={details}>
+	// 		<TouchableOpacity
+	// 			onPress={() => {
+	// 				itemStyle('fancy_item');
+	// 				showDetails();
+	// 			}}>
+	// 				<View style={styles.items}>
+	// 					<Checkbox select={select} selected={selected}/>
+	// 					<Text style={styles.itemStyle}>{item.qty}</Text>
+	// 					<Input placeholder={item.name} value={itemToAdd} method={onItemChange} />
+	// 				</View>
+	// 				<View>{detailsTemplate}</View>
+	// 		</TouchableOpacity>
+	// 	</View>
 
 	return (
-		selected ? emptyItem : <Swipeable style={styles.mainItem}
-			renderRightActions={RightActions} ref={getItem}>
-			{ details ?	activeItemWithDetails : activeItem }
-			</Swipeable>
+		<Swipeable 
+			style={styles.mainItem}
+			renderRightActions={RightActions} 
+			ref={getItem}>	
+			{ activeItem }
+		</Swipeable>
 	)
 }
 const {height, width} = Dimensions.get('window');
@@ -330,6 +353,10 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		textTransform: 'capitalize',
 	},
+	detailsSubmitText: {
+		fontSize: 18,
+		
+	},
 	rightAction: {
 		backgroundColor: "red",
 		justifyContent: 'center',
@@ -351,4 +378,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Item;
+export default Item;  

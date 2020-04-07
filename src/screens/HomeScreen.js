@@ -13,7 +13,7 @@ const HomeScreen = ({ navigation }) => {
 	const [errorMessage, setErrorMessage] = useState("");
 
 	const [newItemInput, showNewItemInput] = useState(false);
-	const [refreshing, setRefreshing] = useState(false);
+	const [showCompleted, setShowCompleted] = useState(false);
 
 	const filterStoresByCompleted = () => {
 		if (state.stores){
@@ -24,11 +24,17 @@ const HomeScreen = ({ navigation }) => {
 	}
 
 	const filterItemsByStore = (store) => {
-		return state.items.filter(item => {
-			if (!item.complete) {
-				return item.store_info.name === store; 
-			}
-		});
+		if (!showCompleted) {
+			return state.items.filter(item => {
+				if (!item.complete) {
+					return item.store_info.name === store; 
+				}
+			});
+		} else {
+			return state.items.filter(item => {
+				return item.store_info.name === store;
+			});
+		}
 	}
 
 	const onlyNotCompleted = (arr) => {
@@ -49,6 +55,7 @@ const HomeScreen = ({ navigation }) => {
 		}
 	}
 
+	// ToDo: Ability to Delete unassigned Items.
 	const deleteUnassignedData = (item) => {
 		console.log(item);
 	}
@@ -60,8 +67,24 @@ const HomeScreen = ({ navigation }) => {
 
 	const setSelectedItem = (item) => {
 		item.complete = !item.complete;
-		editItem(item);
+		return editItem(item);
 	}
+
+	const completed = () => {
+		setShowCompleted(!showCompleted);
+	}
+
+	const showCompletedButton =
+		<View style={styles.showCompleted}>
+			<TouchableOpacity
+				onPress={completed}>
+				{ showCompleted ? 
+					<Text>Hide Completed</Text>
+					:
+					<Text>Show Completed</Text>
+				}
+			</TouchableOpacity>
+		</View>
 
 	useEffect(() => {
 		getItems();
@@ -69,17 +92,16 @@ const HomeScreen = ({ navigation }) => {
 
   return (
   	<View style={styles.container}>
+  		{ state.complete && state.complete.length > 0 ? showCompletedButton : null }
+
 			{ state.unassigned && state.unassigned.length > 0 ? 
 				<ItemList 
 					data={state.unassigned}
 					deleteData={deleteUnassignedData}
-					// itemToAdd={itemToAdd}
-					// storeToAdd={storeToAdd}
 					onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
 					onStoreChange={(newStoreToAdd) => {
 						setStoreToAdd(newStoreToAdd);
 					}}
-					// onItemSubmit={submit}
 					withDetails={true}
 				/> : null
 			}
@@ -92,8 +114,7 @@ const HomeScreen = ({ navigation }) => {
 						<ItemList 
 							data={filterItemsByStore(item.name)}  
 							deleteData={deleteData}
-							setSelectedItem={setSelectedItem} 
-							// onStoreChange={setStoreToAdd}
+							setSelectedItem={setSelectedItem}
 							store={item.name}
 						/>
 					)
@@ -138,6 +159,11 @@ const styles = StyleSheet.create ({
 	addItemButton: {
 		alignSelf: 'center',
 		fontSize: 50,
+	},
+	showCompleted: {
+		alignSelf: 'flex-end',
+		padding: 5,
+		backgroundColor: '#a9a9a9',
 	},
 });
 
