@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
 import Item from '../components/Item';
@@ -92,6 +92,8 @@ const HomeScreen = ({ navigation }) => {
 
   return (
   	<View style={styles.container}>
+		<KeyboardAvoidingView
+			behavior="position">
   		{ state.complete && state.complete.length > 0 ? showCompletedButton : null }
 
 			{ state.unassigned && state.unassigned.length > 0 ? 
@@ -121,6 +123,7 @@ const HomeScreen = ({ navigation }) => {
 				}}
 			/>
 			
+    </KeyboardAvoidingView>
 			<View style={styles.footer}>
 				<TouchableOpacity 
 					onPress={() => {
@@ -144,15 +147,13 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create ({
   container: {
   	flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
   },
-	listStyle: {
-	},
-	newItemInput: {
-		flex: 2,
-	},
+	// newItemInput: {
+	// 	flex: 2,
+	// },
   footer: {
+  	// flex: 2,
 		paddingTop: 10,
 		paddingBottom: 25,
 	},
