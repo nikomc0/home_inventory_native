@@ -92,38 +92,39 @@ const HomeScreen = ({ navigation }) => {
 
   return (
   	<View style={styles.container}>
-		<KeyboardAvoidingView
-			behavior="position">
-  		{ state.complete && state.complete.length > 0 ? showCompletedButton : null }
-
-			{ state.unassigned && state.unassigned.length > 0 ? 
-				<ItemList 
-					data={state.unassigned}
-					deleteData={deleteUnassignedData}
-					onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
-					onStoreChange={(newStoreToAdd) => {
-						setStoreToAdd(newStoreToAdd);
-					}}
-					withDetails={true}
-				/> : null
-			}
-			<FlatList
-				style={styles.listStyle} 
-				data={state.stores}
-				keyExtractor={ store => store.id}
-				renderItem={({ item }) => {
-					return (
+		  <View style={styles.header}>
+			 	{ state.complete && state.complete.length > 0 ? showCompletedButton : null }
+		  </View>
+			<KeyboardAvoidingView
+				behavior="position"
+				style={styles.listStyle}>
+					{ state.unassigned && state.unassigned.length > 0 ? 
 						<ItemList 
-							data={filterItemsByStore(item.name)}  
-							deleteData={deleteData}
-							setSelectedItem={setSelectedItem}
-							store={item.name}
-						/>
-					)
-				}}
-			/>
-			
-    </KeyboardAvoidingView>
+							data={state.unassigned}
+							deleteData={deleteUnassignedData}
+							onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
+							onStoreChange={(newStoreToAdd) => {
+								setStoreToAdd(newStoreToAdd);
+							}}
+							withDetails={true}
+						/> : null
+					}
+					<FlatList
+						style={{height: '100%'}}
+						data={state.stores}
+						keyExtractor={ store => store.id}
+						renderItem={({ item }) => {
+							return (
+								<ItemList 
+									data={filterItemsByStore(item.name)}  
+									deleteData={deleteData}
+									setSelectedItem={setSelectedItem}
+									store={item.name}
+								/>
+							)
+						}}
+					/>
+	    </KeyboardAvoidingView>
 			<View style={styles.footer}>
 				<TouchableOpacity 
 					onPress={() => {
@@ -140,20 +141,24 @@ const HomeScreen = ({ navigation }) => {
 					}
 				</TouchableOpacity>
 			</View>
-    </View>
+		</View>
   );
 }
 
 const styles = StyleSheet.create ({
   container: {
   	flex: 1,
+  	flexDirection: 'column',
     justifyContent: 'space-between',
   },
-	// newItemInput: {
-	// 	flex: 2,
-	// },
+  header: {
+  },
+	listStyle: {
+		flex: 3,
+		padding: 0,
+		margin: 0,
+	},
   footer: {
-  	// flex: 2,
 		paddingTop: 10,
 		paddingBottom: 25,
 	},
