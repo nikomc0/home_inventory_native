@@ -14,6 +14,13 @@ const HomeScreen = ({ navigation }) => {
 
 	const [newItemInput, showNewItemInput] = useState(false);
 	const [showCompleted, setShowCompleted] = useState(false);
+	const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+		getItems();
+    wait(2000).then(() => setRefreshing(false));
+  }, [refreshing]);
 
 	const filterItemsByStatus = (items) => {
 		if (!showCompleted) {
@@ -27,6 +34,12 @@ const HomeScreen = ({ navigation }) => {
 				return item.store_info.name;
 			});
 		}
+	}
+
+	function wait(timeout) {
+	  return new Promise(resolve => {
+	    setTimeout(resolve, timeout);
+	  });
 	}
 
 	const deleteData = async (item) => {
@@ -96,6 +109,7 @@ const HomeScreen = ({ navigation }) => {
 
 				<SafeAreaView style={styles.sectionList}>	
 					<SectionList
+						style={{height: '100%'}}
 						sections={state.storeData}
 						keyExtractor={(item, index) => item + index}
 						renderItem={({ item }) => {
@@ -110,6 +124,7 @@ const HomeScreen = ({ navigation }) => {
 						renderSectionHeader={({ section: { title } }) => (
 							<Text style={styles.sectionHeader}>{title}</Text>
 						)}
+						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					/>
 				</SafeAreaView>
 	    </KeyboardAvoidingView>
