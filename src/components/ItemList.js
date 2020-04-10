@@ -11,10 +11,6 @@ const ItemList = ( {data, store, results, setSelectedItem, deleteData, withDetai
 
 	return (
 		<View style={styles.listContainer}>
-			<View style={styles.listHeader}>
-				<Text style={styles.headerText}>{store}</Text>
-			</View>
-
 			<View style={styles.listStyle}>
 				<FlatList
 					data={data}
@@ -40,19 +36,8 @@ const ItemList = ( {data, store, results, setSelectedItem, deleteData, withDetai
 
 const styles = StyleSheet.create({
 	listContainer: {
-		flexDirection: 'column',
-		// flex: 1,
-		paddingBottom: 5,
+		flex: 1,
 		marginHorizontal: 15,
-	},
-	listHeader: {
-		flexDirection: "row",
-		alignItems: 'center',
-		justifyContent: 'center',
-		paddingTop: 15,
-		paddingBottom: 5,
-	},
-	listStyle: {
 	},
 	headerText: {
 		flex: 1,
