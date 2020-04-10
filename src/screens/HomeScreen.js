@@ -80,7 +80,7 @@ const HomeScreen = ({ navigation }) => {
 			 	{ state.complete && state.complete.length > 0 ? showCompletedButton : null }
 		  </View>
 			<KeyboardAvoidingView
-				behavior="padding"
+				behavior="position"
 				style={styles.listStyle}>
 					{ state.unassigned && state.unassigned.length > 0 ? 
 						<ItemList 
@@ -144,7 +144,7 @@ const styles = StyleSheet.create ({
 		flex: 3,
 	},
   sectionList: {
-		flex: 1,
+		// flex: 1,
   },
   sectionHeader: {
 		backgroundColor: '#e6e6e6',
