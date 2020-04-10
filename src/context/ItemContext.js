@@ -4,6 +4,7 @@ import hi from '../api/hi';
 const itemReducer = (state, action) => {
 	switch (action.type) {
 		case 'get_items':
+		// debugger;
 			state = action.payload;
 
 			var complete = [];
@@ -26,6 +27,9 @@ const itemReducer = (state, action) => {
 			} else {
 				state.unassigned = unassigned;
 			}
+
+			state.storeData = [];
+			state.stores.map((store)=>{state.storeData.push({title: store.name, data: [store]})});
 
 			return state;
 			

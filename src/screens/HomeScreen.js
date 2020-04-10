@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, RefreshControl, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, SectionList, FlatList, TouchableOpacity, RefreshControl, KeyboardAvoidingView } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
 import Item from '../components/Item';
@@ -15,33 +15,17 @@ const HomeScreen = ({ navigation }) => {
 	const [newItemInput, showNewItemInput] = useState(false);
 	const [showCompleted, setShowCompleted] = useState(false);
 
-	const filterStoresByCompleted = () => {
-		if (state.stores){
-			return state.stores.filter((store) => {
-				return onlyNotCompleted(store.items);
-			})
-		}
-	}
-
-	const filterItemsByStore = (store) => {
+	const filterItemsByStatus = (items) => {
 		if (!showCompleted) {
-			return state.items.filter(item => {
+			return items.filter(item => {
 				if (!item.complete) {
-					return item.store_info.name === store; 
+					return item.store_info.name; 
 				}
 			});
 		} else {
-			return state.items.filter(item => {
-				return item.store_info.name === store;
+			return items.filter(item => {
+				return item.store_info.name;
 			});
-		}
-	}
-
-	const onlyNotCompleted = (arr) => {
-		for (let item of arr) {
-			if (!item.complete) {
-				return item;
-			}
 		}
 	}
 
@@ -89,14 +73,14 @@ const HomeScreen = ({ navigation }) => {
 	useEffect(() => {
 		getItems();
 	}, []);
-
+	
   return (
   	<View style={styles.container}>
 		  <View style={styles.header}>
 			 	{ state.complete && state.complete.length > 0 ? showCompletedButton : null }
 		  </View>
 			<KeyboardAvoidingView
-				behavior="position"
+				behavior="padding"
 				style={styles.listStyle}>
 					{ state.unassigned && state.unassigned.length > 0 ? 
 						<ItemList 
@@ -109,21 +93,25 @@ const HomeScreen = ({ navigation }) => {
 							withDetails={true}
 						/> : null
 					}
-					<FlatList
-						style={{height: '100%'}}
-						data={state.stores}
-						keyExtractor={ store => store.id}
+
+				<SafeAreaView style={styles.sectionList}>	
+					<SectionList
+						sections={state.storeData}
+						keyExtractor={(item, index) => item + index}
 						renderItem={({ item }) => {
 							return (
 								<ItemList 
-									data={filterItemsByStore(item.name)}  
+									data={filterItemsByStatus(item.items)}
 									deleteData={deleteData}
 									setSelectedItem={setSelectedItem}
-									store={item.name}
 								/>
 							)
 						}}
+						renderSectionHeader={({ section: { title } }) => (
+							<Text style={styles.sectionHeader}>{title}</Text>
+						)}
 					/>
+				</SafeAreaView>
 	    </KeyboardAvoidingView>
 			<View style={styles.footer}>
 				<TouchableOpacity 
@@ -151,13 +139,20 @@ const styles = StyleSheet.create ({
   	flexDirection: 'column',
     justifyContent: 'space-between',
   },
-  header: {
-  },
+  header: {},
 	listStyle: {
 		flex: 3,
-		padding: 0,
-		margin: 0,
 	},
+  sectionList: {
+		flex: 1,
+  },
+  sectionHeader: {
+		backgroundColor: '#e6e6e6',
+		fontSize: 20,
+		textTransform: 'capitalize',
+		marginHorizontal: 15,
+		padding: 10,
+  },
   footer: {
 		paddingTop: 10,
 		paddingBottom: 25,

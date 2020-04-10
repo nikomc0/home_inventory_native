@@ -306,7 +306,6 @@ const styles = StyleSheet.create({
 	itemCard: {
 		backgroundColor: '#fff',
 		padding: 10,
-		marginTop: 2,
 		marginBottom: 2,
 	},
 	itemCardSelected: {
@@ -355,7 +354,6 @@ const styles = StyleSheet.create({
 	},
 	detailsSubmitText: {
 		fontSize: 18,
-		
 	},
 	rightAction: {
 		backgroundColor: "red",
