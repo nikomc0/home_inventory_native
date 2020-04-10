@@ -87,31 +87,38 @@ const HomeScreen = ({ navigation }) => {
 		getItems();
 	}, []);
 	
+	const listheader = () => {
+		if (state.unassigned && state.unassigned.length > 0) {
+			return ( 
+				<ItemList 
+					data={state.unassigned}
+					deleteData={deleteUnassignedData}
+					onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
+					onStoreChange={(newStoreToAdd) => {
+						setStoreToAdd(newStoreToAdd);
+					}}
+					withDetails={true}
+				/> 
+			)
+		} else {
+			return null
+		}
+	}
+
   return (
   	<View style={styles.container}>
 		  <View style={styles.header}>
 			 	{ state.complete && state.complete.length > 0 ? showCompletedButton : null }
 		  </View>
 			<KeyboardAvoidingView
-				behavior="position"
+				behavior="padding"
 				style={styles.listStyle}>
-					{ state.unassigned && state.unassigned.length > 0 ? 
-						<ItemList 
-							data={state.unassigned}
-							deleteData={deleteUnassignedData}
-							onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
-							onStoreChange={(newStoreToAdd) => {
-								setStoreToAdd(newStoreToAdd);
-							}}
-							withDetails={true}
-						/> : null
-					}
-
-				<SafeAreaView style={styles.sectionList}>	
+				<SafeAreaView style={styles.sectionList}>
 					<SectionList
 						style={{height: '100%'}}
 						sections={state.storeData}
 						keyExtractor={(item, index) => item + index}
+						ListHeaderComponent={listheader}
 						renderItem={({ item }) => {
 							return (
 								<ItemList 
@@ -157,6 +164,8 @@ const styles = StyleSheet.create ({
   header: {},
 	listStyle: {
 		flex: 3,
+		flexDirection: 'column',
+		justifyContent: 'space-between'
 	},
   sectionList: {
 		// flex: 1,

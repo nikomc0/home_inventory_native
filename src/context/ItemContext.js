@@ -34,6 +34,7 @@ const itemReducer = (state, action) => {
 			return state;
 			
 		case 'new_item':
+		debugger;
 			action.payload.id = (state.unassigned.length + 1).toString();
 			state.unassigned = [...state.unassigned, action.payload];
 			state = {...state};
