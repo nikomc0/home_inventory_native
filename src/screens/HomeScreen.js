@@ -112,7 +112,8 @@ const HomeScreen = ({ navigation }) => {
 		  </View>
 			<KeyboardAvoidingView
 				behavior="padding"
-				style={styles.listStyle}>
+				style={styles.listStyle}
+				keyboardVerticalOffset={0}>
 				<SafeAreaView style={styles.sectionList}>
 					<SectionList
 						style={{height: '100%'}}

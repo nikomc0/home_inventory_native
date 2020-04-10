@@ -209,7 +209,10 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 				:
 				<Checkbox select={select} selected={false}/>
 			}
-			<Text style={styles.itemStyle}>{item.qty}</Text>
+			{
+				item.qty === 1 ? null :
+				<Text style={styles.itemStyle}>{item.qty}</Text>
+			}
 			<Text style={styles.itemStyle}>{item.name}</Text>
 		</View>
 
