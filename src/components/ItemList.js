@@ -36,7 +36,6 @@ const ItemList = ( {data, store, results, setSelectedItem, deleteData, withDetai
 
 const styles = StyleSheet.create({
 	listContainer: {
-		flex: 1,
 		marginHorizontal: 15,
 	},
 	headerText: {

@@ -222,7 +222,7 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 					itemStyle('fancy_item');
 					showDetails();
 				}}>
-				{ details ? itemWithDetails : defaultItem }
+				{ details || withDetails ? itemWithDetails : defaultItem }
 			</TouchableOpacity>
 		</View>
 
