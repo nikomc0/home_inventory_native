@@ -22,13 +22,6 @@ const itemReducer = (state, action) => {
 					}
 				})
 			});
-			// state.items.filter(item => {
-			// 	if (item.complete) {
-			// 		complete.push(item);
-			// 	} else {
-			// 		incomplete.push(item);
-			// 	}
-			// })
 
 			state.complete = complete;
 			state.incomplete = incomplete;
@@ -38,7 +31,6 @@ const itemReducer = (state, action) => {
 			} else {
 				state.unassigned = unassigned;
 			}
-
 
 			return state;
 			
