@@ -1,26 +1,37 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createAppContainer } from 'react-navigation';
+import { createStackNavigator, createBottomTabNavigator } from 'react-navigation-stack';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { Provider as AuthProvider } from './src/context/AuthContext';
 import { Provider as ItemProvider } from './src/context/ItemContext';
+import LoadingScreen from './src/screens/LoadingScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import SigninScreen from './src/screens/SigninScreen';
+import SignupScreen from './src/screens/SignupScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
+import { setNavigator } from './src/navigationRef';
 
-const navigator = createStackNavigator({
-  Home: HomeScreen
-  }, 
-  {
-    initialRouteName: 'Home',
-    defaultNavigationOptions: {
-      title: 'Home Inventory'
-  }
+const switchNavigator = createSwitchNavigator({
+  loadingScreen: LoadingScreen,
+  loginFlow: createStackNavigator({
+    Signin: SigninScreen,
+    Signup: SignupScreen,
+  }),
+
+  mainFlow: createStackNavigator({
+    Home: HomeScreen,
+    Settings: SettingsScreen,
+  })
 });
 
-const App = createAppContainer(navigator);
+const App = createAppContainer(switchNavigator);
 
 export default () => {
 	return (
-			<ItemProvider>
-				<App />
-			</ItemProvider>
+      <AuthProvider>
+			  <ItemProvider>
+				  <App ref={(navigator) => {setNavigator(navigator)}}/>
+			  </ItemProvider>
+      </AuthProvider>
 	)
 };

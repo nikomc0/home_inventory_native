@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "github:react-native-community/async-storage",
     "@react-native-community/masked-view": "0.1.5",
     "axios": "^0.19.2",
     "expo": "^36.0.0",
@@ -17,6 +18,7 @@
     "react-devtools": "^3.6.3",
     "react-dom": "16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.1.tar.gz",
+    "react-native-elements": "^1.2.7",
     "react-native-gesture-handler": "^1.5.6",
     "react-native-keyboard-aware-scroll-view": "^0.9.1",
     "react-native-modal": "^11.5.6",
@@ -25,7 +27,8 @@
     "react-native-screens": "2.0.0-alpha.12",
     "react-native-web": "^0.11.7",
     "react-navigation": "^4.3.7",
-    "react-navigation-stack": "^2.3.11"
+    "react-navigation-stack": "^2.3.11",
+    "react-navigation-tabs": "^2.8.11"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

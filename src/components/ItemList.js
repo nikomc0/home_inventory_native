@@ -14,7 +14,7 @@ const ItemList = ( {data, store, results, setSelectedItem, deleteData, withDetai
 			<View style={styles.listStyle}>
 				<FlatList
 					data={data}
-					keyExtractor={ (item) => item.id }
+					keyExtractor={ (item) => item._id.$oid.toString() }
 					renderItem={({ item }) => {
 						return (
 							<Item 

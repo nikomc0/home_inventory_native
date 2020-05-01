@@ -1,23 +1,23 @@
+import { AsyncStorage } from 'react-native';
 import createDataContext from './createDataContext';
 import hi from '../api/hi';
 
 const itemReducer = (state, action) => {
 	switch (action.type) {
 		case 'get_items':
-		// debugger;
 			state = action.payload;
 
 			var complete = [];
 			var incomplete = [];
 			var unassigned = [];
 
-			state.items.filter(item => {
-				if (item.complete) {
-					complete.push(item);
-				} else {
-					incomplete.push(item);
-				}
-			})
+			// state.items.filter(item => {
+			// 	if (item.complete) {
+			// 		complete.push(item);
+			// 	} else {
+			// 		incomplete.push(item);
+			// 	}
+			// })
 
 			state.complete = complete;
 			state.incomplete = incomplete;
@@ -34,7 +34,6 @@ const itemReducer = (state, action) => {
 			return state;
 			
 		case 'new_item':
-		debugger;
 			action.payload.id = (state.unassigned.length + 1).toString();
 			state.unassigned = [...state.unassigned, action.payload];
 			state = {...state};
@@ -48,7 +47,8 @@ const itemReducer = (state, action) => {
 const getItems = dispatch => {
 	return async () => {
 		try {
-			const response = await hi.get('/items');
+			var token = await AsyncStorage.getItem('token');
+			const response = await hi.get('/items', {headers: {"Authorization": `Bearer ${token}`}});
 			dispatch({ type: 'get_items', payload: response.data })
 		} catch (error) {
 			console.log(error);
@@ -73,14 +73,16 @@ const addItem = dispatch => {
 
 const deleteItem = dispatch => {
 	return async (item) => {
-		const response = await hi.delete(`/items/${item.id}`, { item });
+		var itemID = item._id.$oid.toString();
+		const response = await hi.delete(`/items/${itemID}`);
 	}
 }
 
 const editItem = dispatch => {
 	return async (item) => {
 		try {
-			const response = await hi.put(`/items/${item.id}`, { item });
+			var itemID = item._id.$oid.toString();
+			const response = await hi.put(`/items/${itemID}`, { item });
 		} catch (error) {
 			console.log("Unable to edit item.");
 		}
@@ -92,7 +94,9 @@ const newItem = dispatch => {
 		dispatch({ 
 			type: 'new_item', 
 			payload: {
-				id: '',
+				_id: {
+					$oid: '',
+				},
 				name: 'New Item',
 				qty: '1',
 				store_info: {
