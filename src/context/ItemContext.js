@@ -10,7 +10,18 @@ const itemReducer = (state, action) => {
 			var complete = [];
 			var incomplete = [];
 			var unassigned = [];
+			state.storeData = [];
 
+			state.stores.map((store)=>{
+				state.storeData.push({title: store.name, data: [store]});
+				store.items.map((item) => {
+					if (item.complete) {
+						complete.push(item);
+					} else {
+						incomplete.push(item);
+					}
+				})
+			});
 			// state.items.filter(item => {
 			// 	if (item.complete) {
 			// 		complete.push(item);
@@ -28,8 +39,6 @@ const itemReducer = (state, action) => {
 				state.unassigned = unassigned;
 			}
 
-			state.storeData = [];
-			state.stores.map((store)=>{state.storeData.push({title: store.name, data: [store]})});
 
 			return state;
 			
