@@ -146,7 +146,7 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 		<View style={styles.detailsStyle}>
 			<View>
 				<Text style={styles.detailsText}>qty: {item.qty}</Text>
-				<Text style={styles.detailsText}>store: {item.store_info.name}</Text>
+				<Text style={styles.detailsText}>store: {item.store_info.store_name}</Text>
 				<TouchableOpacity 
 					style={styles.storePicker}
 					onPress={togglePicker}>
@@ -247,6 +247,10 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 	// 				<View>{detailsTemplate}</View>
 	// 		</TouchableOpacity>
 	// 	</View>
+
+	// useEffect(() => {
+	// 	console.log(selected);
+	// }, []);
 
 	return (
 		<Swipeable 

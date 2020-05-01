@@ -1,5 +1,15 @@
 import React, { useContext, useState, useEffect} from 'react';
-import { SafeAreaView, StyleSheet, Text, View, SectionList, FlatList, TouchableOpacity, RefreshControl, KeyboardAvoidingView } from 'react-native';
+import { 
+	SafeAreaView, 
+	StyleSheet, 
+	Text, 
+	View, 
+	SectionList, 
+	FlatList, 
+	TouchableOpacity, 
+	RefreshControl, 
+	KeyboardAvoidingView,
+	ActivityIndicator } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
 import Item from '../components/Item';
@@ -15,6 +25,7 @@ const HomeScreen = ({ navigation }) => {
 	const [newItemInput, showNewItemInput] = useState(false);
 	const [showCompleted, setShowCompleted] = useState(false);
 	const [refreshing, setRefreshing] = React.useState(false);
+	const [animating, setAnimating] = useState(true);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -26,12 +37,12 @@ const HomeScreen = ({ navigation }) => {
 		if (!showCompleted) {
 			return items.filter(item => {
 				if (!item.complete) {
-					return item.store_info.name; 
+					return item.store_info.store_name; 
 				}
 			});
 		} else {
 			return items.filter(item => {
-				return item.store_info.name;
+				return item.store_info.store_name;
 			});
 		}
 	}
@@ -83,9 +94,6 @@ const HomeScreen = ({ navigation }) => {
 			</TouchableOpacity>
 		</View>
 
-	useEffect(() => {
-		getItems();
-	}, []);
 	
 	const listheader = () => {
 		if (state.unassigned && state.unassigned.length > 0) {
@@ -105,8 +113,23 @@ const HomeScreen = ({ navigation }) => {
 		}
 	}
 
+	useEffect(() => {
+		console.log(state);
+		getItems().then(()=>{setAnimating(false)});
+	}, []);
+
   return (
   	<View style={styles.container}>
+  		<TouchableOpacity
+  			onPress={()=> navigation.navigate('Settings')}>
+  			<SimpleLineIcons style={styles.settings} name="settings" />	
+  		</TouchableOpacity>
+
+			<ActivityIndicator 
+				animating={animating}
+				size="large"
+			/>
+
 		  <View style={styles.header}>
 			 	{ state.complete && state.complete.length > 0 ? showCompletedButton : null }
 		  </View>
@@ -156,6 +179,13 @@ const HomeScreen = ({ navigation }) => {
   );
 }
 
+HomeScreen.navigationOptions = () => {
+	return {
+		headerShown: true,
+		title: 'Home Inventory',
+	}
+}
+
 const styles = StyleSheet.create ({
   container: {
   	flex: 1,
@@ -190,6 +220,12 @@ const styles = StyleSheet.create ({
 		alignSelf: 'flex-end',
 		padding: 5,
 		backgroundColor: '#a9a9a9',
+	},
+	settings: {
+		fontSize: 30,
+		alignSelf: 'flex-end',
+		paddingBottom: 15,
+		marginHorizontal: 5,
 	},
 });
 
