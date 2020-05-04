@@ -1,9 +1,19 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Animated, FlatList, Dimensions, Modal } from 'react-native';
+import { 
+	View, 
+	TextInput, 
+	StyleSheet, 
+	TouchableOpacity, 
+	Animated, 
+	FlatList, 
+	Dimensions, 
+	Modal } from 'react-native';
+import { Text, ListItem, Badge } from 'react-native-elements';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Checkbox from './Checkbox';
 import Input from './ItemInput';
+import ItemQty from './ItemQty';
 import { Context as ItemContext } from '../context/ItemContext';
 
 const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }) => {
@@ -18,6 +28,8 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 	const [selected, setSelected] = useState(false);
 	const [itemCardStyle, setItemCardStyle] = useState(styles.itemCard);
 	const [itemToDelete, setItemToDelete] = useState('');
+	const [adjustQty, setAdjustQty] = useState(false);
+	const [qty, setQty] = useState(item.qty);
 
 	const [store, setStore] = useState(item);
 
@@ -27,6 +39,10 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 
 	function showDetails() {
 		setDetails(!details);
+	}
+
+	function showAdjustQty() {
+		setAdjustQty(!adjustQty);
 	}
 
 	function select() {
@@ -63,6 +79,7 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 			itemStyle();
 			addItem(item.name, item.store_info.name).then(() => getItems());
 		} else {
+			item.qty = qty;
 			setDetails(false);
 			console.log('Send to be edited');
 			editItem(item).then(getItems);
@@ -93,6 +110,18 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 	const showNewStore = () => {
 		setNewStore(!newStore);
 	};
+
+	function increase() {
+		console.log('increase');
+		setQty(qty + 1);
+	}
+
+	function decrease() {
+		if (qty > 1) {
+			console.log('decrease');
+			setQty(qty - 1);
+		}
+	}
 
 	const storeModal = 
 		<Modal
@@ -145,17 +174,18 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 	const detailsTemplate = 
 		<View style={styles.detailsStyle}>
 			<View>
-				<Text style={styles.detailsText}>qty: {item.qty}</Text>
-				<Text style={styles.detailsText}>store: {item.store_info.store_name}</Text>
 				<TouchableOpacity 
 					style={styles.storePicker}
 					onPress={togglePicker}>
-						<MaterialIcons style={styles.storeIcon} name="store"/>
+						<View style={{flexDirection: 'row'}}>
+							<MaterialIcons style={styles.storeIcon} name="store"/>
+							<Text style={styles.detailsText}>{item.store_info.store_name}</Text>
+						</View>
 							{ picker ? storeModal : null }
 				</TouchableOpacity>
 			</View>
-			<View
-				style={{alignSelf: 'flex-end'}}>
+			<View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 25}}>
+				<ItemQty quantity={qty} increase={increase} decrease={decrease}/>
 				<TouchableOpacity
 					onPress={() => {
 						submit();
@@ -196,7 +226,7 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 					:
 					<Checkbox select={select} selected={false}/>
 				}
-				<Text style={styles.itemStyle}>{item.qty}</Text>
+
 				<Input placeholder={item.name} value={itemToAdd} method={onItemChange} />
 			</View>
 			{ detailsTemplate }
@@ -210,8 +240,7 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 				<Checkbox select={select} selected={false}/>
 			}
 			{
-				item.qty === 1 ? null :
-				<Text style={styles.itemStyle}>{item.qty}</Text>
+				item.qty === 1 ? null : <Badge value={item.qty} status="success"/>
 			}
 			<Text style={styles.itemStyle}>{item.name}</Text>
 		</View>
@@ -229,34 +258,11 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 			</TouchableOpacity>
 		</View>
 
-	// TO DO: Confirm safe to remove.
-	// const activeItemWithDetails = 
-	// 	<View 
-	// 		style={itemCardStyle}
-	// 		details={details}>
-	// 		<TouchableOpacity
-	// 			onPress={() => {
-	// 				itemStyle('fancy_item');
-	// 				showDetails();
-	// 			}}>
-	// 				<View style={styles.items}>
-	// 					<Checkbox select={select} selected={selected}/>
-	// 					<Text style={styles.itemStyle}>{item.qty}</Text>
-	// 					<Input placeholder={item.name} value={itemToAdd} method={onItemChange} />
-	// 				</View>
-	// 				<View>{detailsTemplate}</View>
-	// 		</TouchableOpacity>
-	// 	</View>
-
-	// useEffect(() => {
-	// 	console.log(selected);
-	// }, []);
-
 	return (
 		<Swipeable 
 			style={styles.mainItem}
 			renderRightActions={RightActions} 
-			ref={getItem}>	
+			ref={getItem}>
 			{ activeItem }
 		</Swipeable>
 	)
@@ -378,9 +384,12 @@ const styles = StyleSheet.create({
 	},
 	storeIcon: {
 		fontSize: 30,
-		paddingTop: 15,
+		paddingRight: 10,
 		color: '#A9A9A9',
 	},
+	adjustQty: {
+		flexDirection: 'row',
+	}
 });
 
 export default Item;  

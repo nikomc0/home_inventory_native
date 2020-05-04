@@ -1,5 +1,6 @@
 import React, {useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, ScrollView } from 'react-native';
+import { ListItem } from 'react-native-elements';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import Item from './Item';
 import Input from './ItemInput';
@@ -14,7 +15,7 @@ const ItemList = ( {data, store, results, setSelectedItem, deleteData, withDetai
 			<View style={styles.listStyle}>
 				<FlatList
 					data={data}
-					keyExtractor={ (item) => item._id.$oid.toString() }
+					keyExtractor={ (item, index) => item._id.$oid.toString() }
 					renderItem={({ item }) => {
 						return (
 							<Item 
