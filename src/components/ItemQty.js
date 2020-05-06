@@ -7,21 +7,19 @@ const ItemQty = ({quantity, increase, decrease}) => {
 
 	return (
 		<View style={styles.container}>
-			<View>
-				<TouchableOpacity
-					onPress={decrease}>
-					<MaterialCommunityIcons style={styles.icon} name='chevron-down' />
-				</TouchableOpacity>
-			</View>
+			<TouchableOpacity
+				style={styles.downButton}
+				onPress={decrease}>
+				<MaterialCommunityIcons style={styles.icon} name='chevron-down' />
+			</TouchableOpacity>
 			<View style={styles.quantity}>
 				<Text style={styles.text}> { quantity } </Text>
 			</View>
-			<View>
-				<TouchableOpacity
-					onPress={increase}>
-					<MaterialCommunityIcons style={styles.icon} name='chevron-up' />
-				</TouchableOpacity>
-			</View>
+			<TouchableOpacity
+				style={styles.upButton}
+				onPress={increase}>
+				<MaterialCommunityIcons style={styles.icon} name='chevron-up' />
+			</TouchableOpacity>
 		</View>
 	)
 }
@@ -31,9 +29,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 	},
+	downButton: {},
 	quantity: {
-		marginHorizontal: 15,
+		paddingHorizontal: 20,
 	},
+	upButton: {},
 	icon: {
 		fontSize: 30,
 	},

@@ -234,24 +234,6 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 			{ detailsTemplate }
 		</View>;
 
-	// const defaultItem = 
-	// 	<View style={styles.items}>
-	// 		{ item.complete ? 
-	// 			<View><Checkbox select={select} selected={true}/></View> 
-	// 			:
-	// 			<View><Checkbox select={select} selected={false}/></View>
-	// 		}
-	// 		{
-	// 			item.qty === 1 ? null : <View><Badge value={item.qty} status="success"/></View>
-	// 		}
-	// 		<View>
-	// 			<Text style={styles.itemStyle}>{item.name}</Text>
-	// 		</View>
-	// 		<View>
-	// 			<MaterialCommunityIcons name='chevron-right'/>
-	// 		</View>
-	// 	</View>
-
 	const activeItem = 
 		<View 
 			style={item.complete ? styles.itemCardSelected : itemCardStyle}
