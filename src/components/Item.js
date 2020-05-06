@@ -69,7 +69,8 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 		if (typeof newStore === 'string')
 			item.store_info = {id:'', name: newStore};
 		else {
-			item.store_info = {id: newStore.id, name: newStore.name};	
+			item.store_id.$oid = newStore.id;
+			item.store_info = {id: newStore.id, store_name: newStore.name};	
 		}
 	}
 
@@ -77,11 +78,11 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 		if (item.id === '1') {
 			setDetails(false);
 			itemStyle();
-			addItem(item.name, item.store_info.name).then(() => getItems());
+			addItem(item.name, item.store_info.store_name, qty).then(() => getItems());
 		} else {
 			item.qty = qty;
+			
 			setDetails(false);
-			console.log('Send to be edited');
 			editItem(item).then(getItems);
 			setDetails(false);
 			itemStyle();
@@ -112,13 +113,11 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 	};
 
 	function increase() {
-		console.log('increase');
 		setQty(qty + 1);
 	}
 
 	function decrease() {
 		if (qty > 1) {
-			console.log('decrease');
 			setQty(qty - 1);
 		}
 	}

@@ -58,12 +58,13 @@ const getItems = dispatch => {
 }
 
 const addItem = dispatch => {
-	return async (item, store, callback) => {
+	return async (item, store, qty) => {
 		try {
-			if (item && store){		
+			if (item && store && qty){		
 				const response = await hi.post('/items', {
 					item: item,
-					store: store
+					store: store,
+					qty: qty
 				});
 			}
 		} catch (error) {
@@ -99,7 +100,7 @@ const newItem = dispatch => {
 					$oid: '',
 				},
 				name: 'New Item',
-				qty: '1',
+				qty: 1,
 				store_info: {
 					id: '1',
 				 	name:'Unassigned'
