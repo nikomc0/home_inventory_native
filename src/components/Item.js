@@ -67,7 +67,7 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 
 	const updateStore = (newStore) => {
 		if (typeof newStore === 'string')
-			item.store_info = {id:'', name: newStore};
+			item.store_info = {id:'', store_name: newStore};
 		else {
 			item.store_id.$oid = newStore.id;
 			item.store_info = {id: newStore.id, store_name: newStore.name};	
