@@ -14,6 +14,7 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Checkbox from './Checkbox';
 import Input from './ItemInput';
 import ItemQty from './ItemQty';
+import DefaultItem from './items/DefaultItem';
 import { Context as ItemContext } from '../context/ItemContext';
 
 const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }) => {
@@ -211,7 +212,9 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 					itemToDelete.close();
 				}}>
 				<View>
-					<Animated.Text style={[styles.rightActionText, {transform: [{ scale }]}]}>Delete</Animated.Text>
+					<Animated.Text style={[styles.rightActionText, {transform: [{ scale }]}]}>
+						<MaterialCommunityIcons style={styles.trashIcon} name="trash-can-outline"/>
+					</Animated.Text>
 				</View>
 			</TouchableOpacity>
 		)
@@ -231,18 +234,23 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 			{ detailsTemplate }
 		</View>;
 
-	const defaultItem = 
-		<View style={styles.items}>
-			{ item.complete ? 
-				<Checkbox select={select} selected={true}/> 
-				:
-				<Checkbox select={select} selected={false}/>
-			}
-			{
-				item.qty === 1 ? null : <Badge value={item.qty} status="success"/>
-			}
-			<Text style={styles.itemStyle}>{item.name}</Text>
-		</View>
+	// const defaultItem = 
+	// 	<View style={styles.items}>
+	// 		{ item.complete ? 
+	// 			<View><Checkbox select={select} selected={true}/></View> 
+	// 			:
+	// 			<View><Checkbox select={select} selected={false}/></View>
+	// 		}
+	// 		{
+	// 			item.qty === 1 ? null : <View><Badge value={item.qty} status="success"/></View>
+	// 		}
+	// 		<View>
+	// 			<Text style={styles.itemStyle}>{item.name}</Text>
+	// 		</View>
+	// 		<View>
+	// 			<MaterialCommunityIcons name='chevron-right'/>
+	// 		</View>
+	// 	</View>
 
 	const activeItem = 
 		<View 
@@ -253,7 +261,7 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 					itemStyle('fancy_item');
 					showDetails();
 				}}>
-				{ details || withDetails ? itemWithDetails : defaultItem }
+				{ details || withDetails ? itemWithDetails : <DefaultItem item={item} select={select}/>}
 			</TouchableOpacity>
 		</View>
 
@@ -339,6 +347,7 @@ const styles = StyleSheet.create({
 	},
 	items: {
 		flexDirection: 'row',
+		flex: 1,
 		alignItems: 'center',
 	},
 	checkbox: {
@@ -370,21 +379,20 @@ const styles = StyleSheet.create({
 	rightAction: {
 		backgroundColor: "red",
 		justifyContent: 'center',
-		marginTop: 2,
 		marginBottom: 2,
 	},
 	rightActionText: {
-		color: "#fff",
-		fontWeight: "600",
-		paddingRight: 20,
-		paddingLeft: 20,
-		fontSize: 18,
-		alignSelf: 'center',
+		paddingRight: 10,
+		paddingLeft: 10,
 	},
 	storeIcon: {
 		fontSize: 30,
 		paddingRight: 10,
 		color: '#A9A9A9',
+	},
+	trashIcon: {
+		fontSize: 45,
+		color: '#fff',
 	},
 	adjustQty: {
 		flexDirection: 'row',
