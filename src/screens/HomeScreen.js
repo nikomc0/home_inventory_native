@@ -10,7 +10,8 @@ import {
 	RefreshControl, 
 	KeyboardAvoidingView,
 	ActivityIndicator } from 'react-native';
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { Button } from 'react-native-elements';
+import { SimpleLineIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
 import Item from '../components/Item';
 import NewItemModal from '../components/NewItemModal';
@@ -82,18 +83,31 @@ const HomeScreen = ({ navigation }) => {
 		setShowCompleted(!showCompleted);
 	}
 
-	const showCompletedButton =
-		<View style={styles.showCompleted}>
-			<TouchableOpacity
-				onPress={completed}>
-				{ showCompleted ? 
-					<Text>Hide Completed</Text>
-					:
-					<Text>Show Completed</Text>
-				}
-			</TouchableOpacity>
-		</View>
+	// const showCompletedButton =
+	// 	<View style={styles.showCompleted}>
+	// 		<TouchableOpacity
+	// 			onPress={completed}>
+	// 			{ showCompleted ? 
+	// 				<Text>Hide Completed</Text>
+	// 				:
+	// 				<Text>Show Completed</Text>
+	// 			}
+	// 		</TouchableOpacity>
+	// 	</View>
 
+const showCompletedButton = 
+	showCompleted ? 
+		<Button 
+		buttonStyle={styles.showCompleted}
+		titleStyle={styles.textStyle}
+		title="Completed"
+		onPress={completed}/>
+		: 
+		<Button 
+		buttonStyle={styles.showCompletedSelected}
+		titleStyle={styles.textStyle}
+		title="Completed"
+		onPress={completed}/>
 	
 	const listheader = () => {
 		if (state.unassigned && state.unassigned.length > 0) {
@@ -120,19 +134,14 @@ const HomeScreen = ({ navigation }) => {
 
   return (
   	<View style={styles.container}>
-  		<TouchableOpacity
-  			onPress={()=> navigation.navigate('Settings')}>
-  			<SimpleLineIcons style={styles.settings} name="settings" />	
-  		</TouchableOpacity>
-
-			<ActivityIndicator 
-				animating={animating}
-				size="large"
-			/>
+			{
+				animating ? <ActivityIndicator animating={animating} size="large"	/> : null
+			}
 
 		  <View style={styles.header}>
 			 	{ state.complete && state.complete.length > 0 ? showCompletedButton : null }
 		  </View>
+
 			<KeyboardAvoidingView
 				behavior="padding"
 				style={styles.listStyle}
@@ -179,10 +188,16 @@ const HomeScreen = ({ navigation }) => {
   );
 }
 
-HomeScreen.navigationOptions = () => {
+HomeScreen.navigationOptions = ({navigation}) => {
 	return {
 		headerShown: true,
 		title: 'Home Inventory',
+		headerRight: (
+			<TouchableOpacity
+  			onPress={()=> navigation.navigate('Settings')}>
+  			<MaterialCommunityIcons style={styles.settings} name="settings" size={24}/>
+  		</TouchableOpacity>
+  	),
 	}
 }
 
@@ -191,6 +206,7 @@ const styles = StyleSheet.create ({
   	flex: 1,
   	flexDirection: 'column',
     justifyContent: 'space-between',
+    marginTop: 10,
   },
   header: {},
 	listStyle: {
@@ -208,24 +224,33 @@ const styles = StyleSheet.create ({
 		marginHorizontal: 15,
 		padding: 10,
   },
-  footer: {
-		paddingTop: 10,
-		paddingBottom: 25,
-	},
 	addItemButton: {
 		alignSelf: 'center',
 		fontSize: 50,
 	},
 	showCompleted: {
 		alignSelf: 'flex-end',
-		padding: 5,
-		backgroundColor: '#a9a9a9',
+		backgroundColor: '#303337',
+		margin: 5,
+		paddingTop: 2,
+		paddingBottom: 2
+	},
+	showCompletedSelected: {
+		alignSelf: 'flex-end',
+		backgroundColor: '#bbb',
+		margin: 5,
+		paddingTop: 2,
+		paddingBottom: 2
 	},
 	settings: {
-		fontSize: 30,
-		alignSelf: 'flex-end',
-		paddingBottom: 15,
 		marginHorizontal: 5,
+	},
+	textStyle: {
+		fontSize: 15
+	},
+  footer: {
+		paddingTop: 10,
+		paddingBottom: 25,
 	},
 });
 
