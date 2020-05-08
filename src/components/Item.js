@@ -14,6 +14,8 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Checkbox from './Checkbox';
 import Input from './ItemInput';
 import ItemQty from './ItemQty';
+import DefaultItem from './items/DefaultItem';
+import ItemWithDetails from './items/ItemWithDetails';
 import { Context as ItemContext } from '../context/ItemContext';
 
 const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }) => {
@@ -170,30 +172,6 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 			</View>
 		</Modal>
 
-	const detailsTemplate = 
-		<View style={styles.detailsStyle}>
-			<View>
-				<TouchableOpacity 
-					style={styles.storePicker}
-					onPress={togglePicker}>
-						<View style={{flexDirection: 'row'}}>
-							<MaterialIcons style={styles.storeIcon} name="store"/>
-							<Text style={styles.detailsText}>{item.store_info.store_name}</Text>
-						</View>
-							{ picker ? storeModal : null }
-				</TouchableOpacity>
-			</View>
-			<View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 25}}>
-				<ItemQty quantity={qty} increase={increase} decrease={decrease}/>
-				<TouchableOpacity
-					onPress={() => {
-						submit();
-					}}>
-					<Text style={styles.detailsSubmitText}>Done</Text>
-				</TouchableOpacity>
-			</View>
-		</View>
-
 	const emptyItem = <View></View>
 
 	const RightActions = (progress, dragX, ref) => {
@@ -211,38 +189,13 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 					itemToDelete.close();
 				}}>
 				<View>
-					<Animated.Text style={[styles.rightActionText, {transform: [{ scale }]}]}>Delete</Animated.Text>
+					<Animated.Text style={[styles.rightActionText, {transform: [{ scale }]}]}>
+						<MaterialCommunityIcons style={styles.trashIcon} name="trash-can-outline"/>
+					</Animated.Text>
 				</View>
 			</TouchableOpacity>
 		)
 	}
-
-	const itemWithDetails = 
-		<View>
-			<View style={styles.items}>
-				{ item.complete ? 
-					<Checkbox select={select} selected={true}/> 
-					:
-					<Checkbox select={select} selected={false}/>
-				}
-
-				<Input placeholder={item.name} value={itemToAdd} method={onItemChange} />
-			</View>
-			{ detailsTemplate }
-		</View>;
-
-	const defaultItem = 
-		<View style={styles.items}>
-			{ item.complete ? 
-				<Checkbox select={select} selected={true}/> 
-				:
-				<Checkbox select={select} selected={false}/>
-			}
-			{
-				item.qty === 1 ? null : <Badge value={item.qty} status="success"/>
-			}
-			<Text style={styles.itemStyle}>{item.name}</Text>
-		</View>
 
 	const activeItem = 
 		<View 
@@ -253,7 +206,23 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 					itemStyle('fancy_item');
 					showDetails();
 				}}>
-				{ details || withDetails ? itemWithDetails : defaultItem }
+				{ 
+					details || withDetails ? 
+					<ItemWithDetails 
+						item={item} 
+						select={select} 
+						togglePicker={togglePicker} 
+						picker={picker}
+						qty={qty}
+						increase={increase}
+						decrease={decrease}
+						itemToAdd={itemToAdd}
+						onItemChange={onItemChange}
+						submit={submit}
+						storeModal={storeModal}/> 
+					: 
+					<DefaultItem item={item} select={select}/>
+				}
 			</TouchableOpacity>
 		</View>
 
@@ -339,6 +308,7 @@ const styles = StyleSheet.create({
 	},
 	items: {
 		flexDirection: 'row',
+		flex: 1,
 		alignItems: 'center',
 	},
 	checkbox: {
@@ -356,35 +326,19 @@ const styles = StyleSheet.create({
 		// flex: 1,
 		backgroundColor: "#A9A9A9",
 	},
-	detailsStyle:{
-		paddingTop:15,
-	},
-	detailsText: {
-		color: "#d3d3d3",
-		fontSize: 18,
-		textTransform: 'capitalize',
-	},
-	detailsSubmitText: {
-		fontSize: 18,
-	},
 	rightAction: {
 		backgroundColor: "red",
 		justifyContent: 'center',
-		marginTop: 2,
 		marginBottom: 2,
 	},
 	rightActionText: {
-		color: "#fff",
-		fontWeight: "600",
-		paddingRight: 20,
-		paddingLeft: 20,
-		fontSize: 18,
-		alignSelf: 'center',
-	},
-	storeIcon: {
-		fontSize: 30,
 		paddingRight: 10,
-		color: '#A9A9A9',
+		paddingLeft: 10,
+	},
+
+	trashIcon: {
+		fontSize: 45,
+		color: '#fff',
 	},
 	adjustQty: {
 		flexDirection: 'row',
