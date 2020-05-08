@@ -192,12 +192,11 @@ HomeScreen.navigationOptions = ({navigation}) => {
 	return {
 		headerShown: true,
 		title: 'Home Inventory',
-		headerRight: (
+		headerRight: () => 
 			<TouchableOpacity
   			onPress={()=> navigation.navigate('Settings')}>
   			<MaterialCommunityIcons style={styles.settings} name="settings" size={24}/>
-  		</TouchableOpacity>
-  	),
+  		</TouchableOpacity>,
 	}
 }
 
