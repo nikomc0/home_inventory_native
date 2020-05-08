@@ -15,6 +15,7 @@ import Checkbox from './Checkbox';
 import Input from './ItemInput';
 import ItemQty from './ItemQty';
 import DefaultItem from './items/DefaultItem';
+import ItemWithDetails from './items/ItemWithDetails';
 import { Context as ItemContext } from '../context/ItemContext';
 
 const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }) => {
@@ -171,30 +172,6 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 			</View>
 		</Modal>
 
-	const detailsTemplate = 
-		<View style={styles.detailsStyle}>
-			<View>
-				<TouchableOpacity 
-					style={styles.storePicker}
-					onPress={togglePicker}>
-						<View style={{flexDirection: 'row'}}>
-							<MaterialIcons style={styles.storeIcon} name="store"/>
-							<Text style={styles.detailsText}>{item.store_info.store_name}</Text>
-						</View>
-							{ picker ? storeModal : null }
-				</TouchableOpacity>
-			</View>
-			<View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 25}}>
-				<ItemQty quantity={qty} increase={increase} decrease={decrease}/>
-				<TouchableOpacity
-					onPress={() => {
-						submit();
-					}}>
-					<Text style={styles.detailsSubmitText}>Done</Text>
-				</TouchableOpacity>
-			</View>
-		</View>
-
 	const emptyItem = <View></View>
 
 	const RightActions = (progress, dragX, ref) => {
@@ -220,20 +197,6 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 		)
 	}
 
-	const itemWithDetails = 
-		<View>
-			<View style={styles.items}>
-				{ item.complete ? 
-					<Checkbox select={select} selected={true}/> 
-					:
-					<Checkbox select={select} selected={false}/>
-				}
-
-				<Input placeholder={item.name} value={itemToAdd} method={onItemChange} />
-			</View>
-			{ detailsTemplate }
-		</View>;
-
 	const activeItem = 
 		<View 
 			style={item.complete ? styles.itemCardSelected : itemCardStyle}
@@ -243,7 +206,23 @@ const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }
 					itemStyle('fancy_item');
 					showDetails();
 				}}>
-				{ details || withDetails ? itemWithDetails : <DefaultItem item={item} select={select}/>}
+				{ 
+					details || withDetails ? 
+					<ItemWithDetails 
+						item={item} 
+						select={select} 
+						togglePicker={togglePicker} 
+						picker={picker}
+						qty={qty}
+						increase={increase}
+						decrease={decrease}
+						itemToAdd={itemToAdd}
+						onItemChange={onItemChange}
+						submit={submit}
+						storeModal={storeModal}/> 
+					: 
+					<DefaultItem item={item} select={select}/>
+				}
 			</TouchableOpacity>
 		</View>
 
@@ -347,17 +326,6 @@ const styles = StyleSheet.create({
 		// flex: 1,
 		backgroundColor: "#A9A9A9",
 	},
-	detailsStyle:{
-		paddingTop:15,
-	},
-	detailsText: {
-		color: "#d3d3d3",
-		fontSize: 18,
-		textTransform: 'capitalize',
-	},
-	detailsSubmitText: {
-		fontSize: 18,
-	},
 	rightAction: {
 		backgroundColor: "red",
 		justifyContent: 'center',
@@ -367,11 +335,7 @@ const styles = StyleSheet.create({
 		paddingRight: 10,
 		paddingLeft: 10,
 	},
-	storeIcon: {
-		fontSize: 30,
-		paddingRight: 10,
-		color: '#A9A9A9',
-	},
+
 	trashIcon: {
 		fontSize: 45,
 		color: '#fff',

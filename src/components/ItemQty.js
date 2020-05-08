@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
 	},
 	downButton: {},
 	quantity: {
-		paddingHorizontal: 20,
+		paddingHorizontal: 15,
 	},
 	upButton: {},
 	icon: {
