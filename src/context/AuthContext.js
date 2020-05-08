@@ -35,7 +35,7 @@ const signup = (dispatch) => {
 
 			navigate('Home');
 		} catch (error) {
-			dispatch({ type: 'add_error', payload: error.response.data })
+			dispatch({ type: 'add_error', payload: error.response.data.email })
 		}
 	}
 }
