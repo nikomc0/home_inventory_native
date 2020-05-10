@@ -142,8 +142,7 @@ const Item = ({ item, data, setSelectedItem, onSwipeLeft, onSwipeRight, withDeta
 								return (
 									<TouchableOpacity 
 										onPress={() => {
-											updateStore(item);
-											togglePicker();
+											updateStore(item).then(()=>togglePicker());
 										}}>
 										<Text style={styles.storeModalText}>{item.name}</Text>
 									</TouchableOpacity>
