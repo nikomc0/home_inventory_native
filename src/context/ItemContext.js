@@ -97,10 +97,11 @@ const newItem = dispatch => {
 			type: 'new_item', 
 			payload: {
 				_id: {
-					$oid: '',
+					$oid: 0,
 				},
 				name: 'New Item',
 				qty: 1,
+				store_id: { $oid: 0},
 				store_info: {
 					id: '1',
 				 	name:'Unassigned'

@@ -24,9 +24,7 @@ const ItemList = ( {data, store, results, setSelectedItem, deleteData, withDetai
 								deleteItem={deleteData} 
 								setSelectedItem={setSelectedItem} 
 								withDetails={withDetails}
-								setStore={(selectedStore) => {
-									onStoreChange(selectedStore);
-								}}/>
+								setStore={(selectedStore) => onStoreChange(selectedStore)}/>
 						)
 					}}
 				/>

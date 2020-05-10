@@ -18,7 +18,7 @@ import DefaultItem from './items/DefaultItem';
 import ItemWithDetails from './items/ItemWithDetails';
 import { Context as ItemContext } from '../context/ItemContext';
 
-const Item = ({ item, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }) => {
+const Item = ({ item, data, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }) => {
 	const { state, getItems, addItem, editItem, deleteItem } = useContext(ItemContext);
 	const [picker, showPicker] = useState(false);
 

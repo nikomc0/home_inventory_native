@@ -116,9 +116,7 @@ const showCompletedButton =
 					data={state.unassigned}
 					deleteData={deleteUnassignedData}
 					onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
-					onStoreChange={(newStoreToAdd) => {
-						setStoreToAdd(newStoreToAdd);
-					}}
+					onStoreChange={(newStoreToAdd) => setStoreToAdd(newStoreToAdd)}
 					withDetails={true}
 				/> 
 			)
@@ -128,7 +126,6 @@ const showCompletedButton =
 	}
 
 	useEffect(() => {
-		console.log(state);
 		getItems().then(()=>{setAnimating(false)});
 	}, []);
 
