@@ -1,3 +1,4 @@
+import { Sentry } from 'sentry-expo';
 import { AsyncStorage } from 'react-native';
 import createDataContext from './createDataContext';
 import hi from '../api/hi';
@@ -75,8 +76,14 @@ const addItem = dispatch => {
 
 const deleteItem = dispatch => {
 	return async (item) => {
-		var itemID = item._id.$oid.toString();
-		const response = await hi.delete(`/items/${itemID}`);
+		try {
+			var itemID = item._id.$oid.toString();
+			const response = await hi.delete(`/items/${itemID}`);
+		} catch (error) {
+			console.log(error.response.data);
+			Sentry.captureException(error.response);
+			throw new Error(error.response.data);
+		}
 	}
 }
 
@@ -87,6 +94,7 @@ const editItem = dispatch => {
 			const response = await hi.put(`/items/${itemID}`, { item });
 		} catch (error) {
 			console.log("Unable to edit item.");
+			Sentry.captureException(error);
 		}
 	}
 }

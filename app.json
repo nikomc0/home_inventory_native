@@ -26,6 +26,19 @@
     "ios": {
       "supportsTablet": true
     },
-    "description": ""
+    "description": "",
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "osfp",
+            "project": "home-inventory",
+            "authToken": "7abde94b0749462f8543e28d75e9ab3e4d68cf865e93460ca488ff91f3c13591",
+            // "url": "your sentry url here" // OPTIONAL- only necessary when self-hosting Sentry
+          }
+        }
+      ]
+    }
   }
 }
