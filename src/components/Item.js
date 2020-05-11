@@ -4,10 +4,11 @@ import {
 	TextInput, 
 	StyleSheet, 
 	TouchableOpacity, 
+	TouchableNativeFeedback,
 	Animated, 
 	FlatList, 
 	Dimensions, 
-	Modal } from 'react-native';
+	Modal} from 'react-native';
 import { Text, ListItem, Badge } from 'react-native-elements';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -18,7 +19,7 @@ import DefaultItem from './items/DefaultItem';
 import ItemWithDetails from './items/ItemWithDetails';
 import { Context as ItemContext } from '../context/ItemContext';
 
-const Item = ({ item, data, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, }) => {
+const Item = ({ item, data, setSelectedItem, onSwipeLeft, onSwipeRight, withDetails, onLongPress }) => {
 	const { state, getItems, addItem, editItem, deleteItem } = useContext(ItemContext);
 	const [picker, showPicker] = useState(false);
 
@@ -205,7 +206,8 @@ const Item = ({ item, data, setSelectedItem, onSwipeLeft, onSwipeRight, withDeta
 				onPress={() => {
 					itemStyle('fancy_item');
 					showDetails();
-				}}>
+				}}
+				onLongPress={onLongPress}>
 				{ 
 					details || withDetails ? 
 					<ItemWithDetails 

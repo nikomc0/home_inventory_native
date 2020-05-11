@@ -10,6 +10,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import SigninScreen from './src/screens/SigninScreen';
 import SignupScreen from './src/screens/SignupScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import StoreScreen from './src/screens/StoreScreen';
 import { setNavigator } from './src/navigationRef';
 
 Sentry.init({
@@ -28,6 +29,7 @@ const switchNavigator = createSwitchNavigator({
   mainFlow: createStackNavigator({
     Home: HomeScreen,
     Settings: SettingsScreen,
+    Store: StoreScreen,
   })
 });
 

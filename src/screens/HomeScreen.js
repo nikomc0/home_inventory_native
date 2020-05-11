@@ -159,7 +159,10 @@ const showCompletedButton =
 							)
 						}}
 						renderSectionHeader={({ section: { title } }) => (
-							<Text style={styles.sectionHeader}>{title}</Text>
+							<TouchableOpacity
+								onPress={() => navigation.navigate('Store', { store: {title} })}>
+								<Text style={styles.sectionHeader}>{title}</Text>
+							</TouchableOpacity>
 						)}
 						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					/>

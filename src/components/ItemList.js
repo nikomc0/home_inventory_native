@@ -4,11 +4,47 @@ import { ListItem } from 'react-native-elements';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import Item from './Item';
 import Input from './ItemInput';
+import DraggableFlatList from 'react-native-draggable-flatlist'
 
 const ItemList = ( {data, store, results, setSelectedItem, deleteData, withDetails, onStoreChange}) => {
+	const [state, setState] = useState(data);
 
-	function onSwipeRight (){
-	}
+  const renderItem = ({ item, drag,}) => {
+    return (
+			<Item 
+				item={item} 
+				deleteItem={deleteData} 
+				setSelectedItem={setSelectedItem} 
+				withDetails={withDetails}
+				setStore={(selectedStore) => onStoreChange(selectedStore)}
+				onLongPress={drag}/>
+    );
+  };
+
+  useEffect(()=>{
+  	console.log(state);
+  }, []);
+   
+ 	// return (
+  //   <View style={{ flex: 1 }}>
+  //     <DraggableFlatList
+  //       data={state}
+  //       keyExtractor={(item, index) => `draggable-item-${item._id.$oid.toString()}`}
+  //       renderItem={({ item, drag }) => {
+  //       	return(
+		// 				<Item 
+		// 					item={item} 
+		// 					deleteItem={deleteData} 
+		// 					setSelectedItem={setSelectedItem} 
+		// 					withDetails={withDetails}
+		// 					setStore={(selectedStore) => onStoreChange(selectedStore)}
+		// 					onLongPress={drag}/>
+  //       	)
+  //       }}
+  //       onDragEnd={({ data }) => setState(data)}/>
+  //   </View>
+  // )
+
 
 	return (
 		<View style={styles.listContainer}>
@@ -20,7 +56,6 @@ const ItemList = ( {data, store, results, setSelectedItem, deleteData, withDetai
 						return (
 							<Item 
 								item={item} 
-								onSwipeRight={onSwipeRight} 
 								deleteItem={deleteData} 
 								setSelectedItem={setSelectedItem} 
 								withDetails={withDetails}
