@@ -52,7 +52,8 @@ const Item = ({ item, data, setSelectedItem, onSwipeLeft, onSwipeRight, withDeta
 		setSelected(!selected);
 		itemStyle('select');
 		item.complete = !item.complete;
-		editItem(item).then(getItems);
+		// editItem(item).then(getItems);
+		editItem(item);
 	}
 
 	const onItemChange = (newItemToAdd) => {
@@ -278,9 +279,10 @@ const styles = StyleSheet.create({
 	storeModalText: {
 		fontSize: 20,
 		textTransform: 'capitalize',
+		padding: 5,
 	},
 	storeModalList: {
-		marginHorizontal: 15,
+		// marginHorizontal: 15,
 	},
 	storeModalActionRow: {
 		flexDirection: 'row',

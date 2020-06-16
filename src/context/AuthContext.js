@@ -70,7 +70,7 @@ const signout = (dispatch) => async () => {
 const getToken = (dispatch) => async () => {
 	const token = await AsyncStorage.getItem('token');
 	const user = await AsyncStorage.getItem('user');
-	console.log({token, user});
+
 	if (token && user) {
 		dispatch({ type: 'signin', payload: { email: user, token: token }});
 		navigate('Home');

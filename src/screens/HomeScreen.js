@@ -9,10 +9,12 @@ import {
 	TouchableOpacity, 
 	RefreshControl, 
 	KeyboardAvoidingView,
-	ActivityIndicator } from 'react-native';
+	ActivityIndicator,
+	StatusBar } from 'react-native';
 import { Button } from 'react-native-elements';
 import { SimpleLineIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
+import ItemListComponent from '../components/ItemListComponent';
 import Item from '../components/Item';
 import NewItemModal from '../components/NewItemModal';
 import hi from '../api/hi';
@@ -20,7 +22,7 @@ import { Context as ItemContext } from '../context/ItemContext';
 import { AppState } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
-	const {state, getItems, addItem, editItem, newItem} = useContext(ItemContext);
+	const {state, getItems, addItem, editItem, newItem, setLocalItems} = useContext(ItemContext);
 	const [errorMessage, setErrorMessage] = useState("");
 
 	const [newItemInput, showNewItemInput] = useState(false);
@@ -74,26 +76,9 @@ const HomeScreen = ({ navigation }) => {
 		setStoreToAdd("");
 	}
 
-	const setSelectedItem = (item) => {
-		item.complete = !item.complete;
-		return editItem(item);
-	}
-
 	const completed = () => {
 		setShowCompleted(!showCompleted);
 	}
-
-	// const showCompletedButton =
-	// 	<View style={styles.showCompleted}>
-	// 		<TouchableOpacity
-	// 			onPress={completed}>
-	// 			{ showCompleted ? 
-	// 				<Text>Hide Completed</Text>
-	// 				:
-	// 				<Text>Show Completed</Text>
-	// 			}
-	// 		</TouchableOpacity>
-	// 	</View>
 
 const showCompletedButton = 
 	showCompleted ? 
@@ -112,7 +97,7 @@ const showCompletedButton =
 	const listheader = () => {
 		if (state.unassigned && state.unassigned.length > 0) {
 			return ( 
-				<ItemList 
+				<ItemListComponent 
 					data={state.unassigned}
 					deleteData={deleteUnassignedData}
 					onItemChange={(newItemToAdd) => setItemToAdd(newItemToAdd)}
@@ -126,11 +111,12 @@ const showCompletedButton =
 	}
 
 	useEffect(() => {
-		getItems().then(()=>{setAnimating(false)});
+		getItems().then(() => setAnimating(false));
 	}, []);
 
   return (
   	<View style={styles.container}>
+  	<StatusBar hidden={true}/>
 			{
 				animating ? <ActivityIndicator animating={animating} size="large"	/> : null
 			}
@@ -151,10 +137,10 @@ const showCompletedButton =
 						ListHeaderComponent={listheader}
 						renderItem={({ item }) => {
 							return (
-								<ItemList 
+								<ItemListComponent 
 									data={filterItemsByStatus(item.items)}
 									deleteData={deleteData}
-									setSelectedItem={setSelectedItem}
+									store={item}
 								/>
 							)
 						}}
@@ -214,13 +200,11 @@ const styles = StyleSheet.create ({
 		justifyContent: 'space-between'
 	},
   sectionList: {
-		// flex: 1,
   },
   sectionHeader: {
 		backgroundColor: '#e6e6e6',
 		fontSize: 20,
 		textTransform: 'capitalize',
-		marginHorizontal: 15,
 		padding: 10,
   },
 	addItemButton: {

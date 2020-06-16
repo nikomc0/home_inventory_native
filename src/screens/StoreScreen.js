@@ -1,12 +1,11 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text } from 'react-native';
+import DraggableFlatList from 'react-native-draggable-flatlist';
 import { Context as ItemContext } from '../context/ItemContext';
 
 const StoreScreen = ({navigation}) => {
-	const {state, getItems, addItem, editItem, newItem} = useContext(ItemContext);
-
 	useEffect(() => {
-		console.log(state);
+
 	}, [])
 
 	return (
