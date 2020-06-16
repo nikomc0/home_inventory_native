@@ -1,30 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { TextInput, View, StyleSheet } from 'react-native';
 
-const Input = ({ placeholder, value, method, item, onEndEditing }) => {
-	const [holder, setHolder] = useState("");
-
-	const getPlaceholder = () => {
-		if (item) {
-			setHolder(item.item);
-		} else {
-			setHolder(placeholder);
-		}
-	}
-
-	useEffect(() => {
-		getPlaceholder();
-	}, []);
+const Input = ({ value, method}) => {
+	const [val, onChangeText] = useState(value);
 
 	return (
 		<View style={styles.items}>
 			<TextInput 
 				style={styles.itemStyle}
 				autoCapitalize='words'
-				placeholder={holder}
 				value={value}
-				onChangeText={method}
-				onEndEditing={onEndEditing}/>
+				onChangeText={method}/>
 		</View>
 	)
 }
