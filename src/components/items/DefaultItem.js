@@ -5,7 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Checkbox from '../Checkbox';
 import Input from '../ItemInput';
 
-const DefaultItem = ({item, select, editable, itemToAdd, onItemChange}) => {
+const DefaultItem = ({item, select, canEdit, itemToAdd, onItemChange}) => {
 	return (
 		<View style={styles.container}>
 			{ item.complete ? 
@@ -27,15 +27,15 @@ const DefaultItem = ({item, select, editable, itemToAdd, onItemChange}) => {
 			}
 			<View style={styles.text}>
 				{
-					editable ? 
-					<Input placeholder={item.name} value={itemToAdd} method={onItemChange} /> 
+					canEdit ? 
+					<Input value={item.name} method={onItemChange} /> 
 					:
 					<Text style={styles.itemName}>{item.name}</Text>
 				}
 			</View>
 			<View style={styles.chevron}>
 				{
-					editable? 
+					canEdit? 
 					<MaterialCommunityIcons style={styles.chevronIcon} name='chevron-down'/>
 					:
 					<MaterialCommunityIcons style={styles.chevronIcon} name='chevron-right'/>					

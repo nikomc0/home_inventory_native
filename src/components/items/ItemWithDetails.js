@@ -26,7 +26,7 @@ const ItemWithDetails = ({item, select, togglePicker, picker, qty, increase, dec
 
 	return (
 		<View>
-			<DefaultItem item={item} editable={true} itemToAdd={itemToAdd} onItemChange={onItemChange}/>
+			<DefaultItem item={item} canEdit={true} itemToAdd={itemToAdd} onItemChange={onItemChange}/>
 			{ detailsTemplate }
 		</View>
 	)
