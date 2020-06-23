@@ -8,7 +8,8 @@ import {
 	Animated, 
 	FlatList, 
 	Dimensions, 
-	Modal} from 'react-native';
+	Modal,
+	Alert } from 'react-native';
 import { Text, ListItem, Badge } from 'react-native-elements';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -79,6 +80,10 @@ const Item = ({ item, data, setSelectedItem, onSwipeLeft, onSwipeRight, withDeta
 	}
 
 	const submit = () => {
+		if (item.store_info.name === "Unassigned") {
+			return alert('Please choose a store.');
+		}
+		
 		if (item.id === '1') {
 			setDetails(false);
 			itemStyle();
