@@ -53,8 +53,7 @@ const Item = ({ item, data, setSelectedItem, onSwipeLeft, onSwipeRight, withDeta
 		setSelected(!selected);
 		itemStyle('select');
 		item.complete = !item.complete;
-		// editItem(item).then(getItems);
-		editItem(item);
+		editItem(item).then(getItems);
 	}
 
 	const onItemChange = (newItemToAdd) => {

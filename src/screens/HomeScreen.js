@@ -37,17 +37,17 @@ const HomeScreen = ({ navigation }) => {
   }, [refreshing]);
 
 	const filterItemsByStatus = (items) => {
-		if (!showCompleted) {
-			return items.filter(item => {
-				if (!item.complete) {
-					return item.store_info.store_name; 
-				}
-			});
-		} else {
-			return items.filter(item => {
-				return item.store_info.store_name;
-			});
-		}
+		// var sorted = items.sort((a,b) => a.location - b.location);
+
+		// if (status === "incomplete") {
+		// 	return sorted.filter(item => {
+		// 		if (!item.complete) {
+		// 			return item.store_info.store_name; 
+		// 		}
+		// 	});
+		// } 
+
+		return items.sort((a, b) => a.location - b.location);
 	}
 
 	function wait(timeout) {
@@ -137,21 +137,34 @@ const showCompletedButton =
 						ListHeaderComponent={listheader}
 						renderItem={({ item }) => {
 							return (
-								<ItemListComponent 
-									data={filterItemsByStatus(item.items)}
+								<ItemList
+									data={filterItemsByStatus(state.incomplete)}
 									deleteData={deleteData}
 									store={item}
 								/>
 							)
 						}}
 						renderSectionHeader={({ section: { title } }) => (
-							<TouchableOpacity
-								onPress={() => navigation.navigate('Store', { store: {title} })}>
 								<Text style={styles.sectionHeader}>{title}</Text>
-							</TouchableOpacity>
+					
 						)}
 						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					/>
+
+					{ state.complete && showCompleted ? 
+						<FlatList 
+							data={state.complete}
+							keyExtractor={(item) => item._id.$oid.toString()}
+							renderItem={({item}) => {
+								return (
+									<Item 
+										item={item}
+									/>
+								)
+							}}
+						/> : null 
+					}
+
 				</SafeAreaView>
 	    </KeyboardAvoidingView>
 			<View style={styles.footer}>
@@ -200,6 +213,7 @@ const styles = StyleSheet.create ({
 		justifyContent: 'space-between'
 	},
   sectionList: {
+  	flex: 2,
   },
   sectionHeader: {
 		backgroundColor: '#e6e6e6',

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default axios.create({
 	baseURL: 'https://home-inventory-api.herokuapp.com',
-	// baseURL: 'https://8c9089ab.ngrok.io',
+	// baseURL: 'https://1456481cd96d.ngrok.io',
 	headers: {
 	}
 });

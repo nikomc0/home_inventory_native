@@ -10,27 +10,47 @@ import { Context } from '../context/ItemContext';
 export default class ItemListComponent extends PureComponent {
 	static contextType = Context;
 
+	constructor(props) {
+		super(props);
+		this.state = {
+			data: this.props.data,
+			sortedItems: [],
+		}
+		this.getItems = Context._currentValue.getItems;
+	}
+
+	componentDidMount() {
+		console.log(this.getItems);
+		console.log("Component Did Mount")
+	}
+
+	componentWillUnmount() {
+		console.log("Component Will Unmount")
+	}
+
 	render(){
 		const {
 			data, 
 			store, 
-			results, 
 			deleteData, 
 			withDetails, 
 			onStoreChange
 		} = this.props;
 
-		const {state, getLocalItems, setLocalItems} = this.context;
+		const {state, getItems, getLocalItems, setLocalItems, editItem} = this.context;
 
 		function setLocalData(data, store){
-			setLocalItems(data, store);
+			data.map((item, index) => {
+				item.location = index;
+				editItem(item).then(getItems());
+			});
 		}
 
 	 	return (
-			<View style={{ flex: 1 }}>
+			<View>
 	      <DraggableFlatList
 	      	style={styles.listContainer}
-	        data={data}
+	        data={this.state.data}
 	        keyExtractor={(item, index) => `draggable-item-${item._id.$oid.toString()}`}
 	        renderItem={({ item, drag }) => {
 	        	return(
@@ -43,11 +63,9 @@ export default class ItemListComponent extends PureComponent {
 	        	)
 	        }}
 	        onDragEnd={({ data }) => {
-	        	setLocalItems(state, store, data);
-	        		// this.setState({data});
-	        		// setLocalData(data, store);
-	        	}
-	        }/>
+        		this.setState({data});
+        		setLocalData(data, store);
+	        }}/>
 	    </View>
 	  )
 	}

@@ -8,17 +8,16 @@ import DraggableFlatList from 'react-native-draggable-flatlist'
 import { Context } from '../context/ItemContext';
 
 const ItemList = ( {data, store, results, setSelectedItem, deleteData, withDetails, onStoreChange}) => {
-	const {state, getLocalItems, setLocalItems} = useContext(Context);
+	const {state, getLocalItems, setLocalItems, getItems, editItem} = useContext(Context);
 
 	const [stores, setStores] = useState(data);
 
 	function setLocalData(data, store){
-		setLocalItems(data, store);
+		data.map((item, index) => {
+			item.location = index;
+			editItem(item).then(getItems());
+		});
 	}
-
-  useEffect(()=>{
- 
-  }, []);
    
  	return (
     <View style={{ flex: 1 }}>
@@ -39,6 +38,7 @@ const ItemList = ( {data, store, results, setSelectedItem, deleteData, withDetai
         onDragEnd={({ data }) => {
         		setStores(data);
         		setLocalData(data, store);
+        		getItems();
         	}
         }/>
     </View>

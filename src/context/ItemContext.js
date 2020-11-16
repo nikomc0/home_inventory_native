@@ -17,13 +17,14 @@ const itemReducer = (state, action) => {
 			state.stores.map((store)=>{
 				state.storeData.push({title: store.name, data: [store]});
 				store.items.map((item, location) => {
-					if (item) {
+					if (item.location === null) {
 						item.location = location;
-						if (item.complete) {
-							complete.push(item);
-						} else {
-							incomplete.push(item);
-						}
+					}
+
+					if (item.complete) {
+						complete.push(item);
+					} else {
+						incomplete.push(item);
 					}
 				})
 			});
@@ -40,8 +41,8 @@ const itemReducer = (state, action) => {
 			return state;
 			
 		case 'new_item':
+			state ={...state, unassigned: action.payload};
 			action.payload.id = (state.unassigned.length + 1).toString();
-			state.unassigned = [...state.unassigned, action.payload];
 			state = {...state};
 			return state;
 
@@ -51,6 +52,15 @@ const itemReducer = (state, action) => {
 
 		case 'set_local':
 			return action.payload;
+
+		case 'complete_items':
+			return {...state, complete: action.payload};
+
+		case 'incomplete_items':
+			return {...state, incomplete: action.payload};
+
+		case 'store_data':
+			return {...state, storeData: action.payload};
 
 		default:
 			return state;
@@ -71,8 +81,6 @@ const getLocalItems = dispatch => {
 const setLocalItems = dispatch => {
 	return (state, store, data) => {
 		var state = {...state};
-		
-		debugger;
 
 		var index = state.stores.findIndex(value => value.id === store.id);
 
@@ -80,92 +88,6 @@ const setLocalItems = dispatch => {
 
 		dispatch({ type: 'set_local', payload: state})
 	}
-	// return async (data, store) => {
-		// try { 
-		// 	var list = JSON.parse(await AsyncStorage.getItem('list'));
-		// 	var currentStoreIndex = null;
-
-		// 	if (list){
-		// 		var currentStore = list.stores.find(function(store, index){
-		// 			if (store.name === store.name){
-		// 				currentStoreIndex = index;
-		// 				return store;
-		// 			}
-		// 		});
-
-		// 		list.stores[currentStoreIndex].items = data;
-		// 		await AsyncStorage.setItem('list', JSON.stringify(list));
-		// 	}
-
-		// } catch (error) {
-
-		// }
-	// }
-}
-
-const getCurrentList = async () => {
-	return JSON.parse(await AsyncStorage.getItem('list'));
-} 
-
-const getCurrentServerDiff = (currentList, serverList) => {
-		console.log({currentList, serverList});
-		debugger;	
-		// If they are different find out how.
-		if (!_.isEqual(currentList.stores, serverList.stores)) {
-			/*
-			* Compare two objects by reducing an array of keys in obj1, having the
-			* keys in obj2 as the intial value of the result.
-			*/
-			function getObjectDiff(obj1, obj2) {
-			    const diff = Object.keys(obj1).reduce((result, key, value) => {
-			        if (!obj2.hasOwnProperty(key)) {
-			            result.push(key);
-			        } else if (_.isEqual(obj1[key], obj2[key])) {
-			            const resultKeyIndex = result.indexOf(key);
-			            result.splice(resultKeyIndex, 1);
-			        }
-			        return result;
-			    }, Object.keys(obj2));
-			    return diff;
-			}
-
-			const diff = getObjectDiff(currentList.stores, serverList.stores).map((i) => parseInt(i));
-			// Find the changes.					
-			diff.forEach((index) => {
-				var currentListItems = currentList.stores[index].items;
-				var serverItems = serverList.stores[index].items;
-				
-				// Is the server response missing items that the current list has?
-				if (currentListItems.length > serverItems.length) {
-					var itemToRemove = _.differenceWith(currentListItems, serverItems, _.isEqual);
-					
-					itemToRemove.map((item) => {
-						var itemIndex = _.findIndex(currentListItems, item);
-						currentListItems[itemIndex] = null;
-					});
-
-					currentList.stores[index].items = currentListItems.filter((obj) => obj);
-				} else if (currentListItems.length < serverItems.length ) { // Is currentList missing items that the server has? Then you add items to the currentList.
-					currentList.stores[index].items = _.merge(currentListItems, serverItems);
-				} 
-			});
-		}
-
-		// console.log(currentList);
-
-		// // // Load the changes into Local Storage.
-		// await AsyncStorage.setItem('list', JSON.stringify(currentList));
-
-		return currentList;
-}
-
-const compareLists = (currentList, serverList) => {
-	console.log({ currentList, serverList });
-	serverList.stores.map((store) => {
-		store.items.map((item) => {
-			console.log({store, item});
-		})
-	})
 }
 
 const getItems = dispatch => {
@@ -176,30 +98,69 @@ const getItems = dispatch => {
 
 			// Get Server List.
 			const response = await hi.get('/items', {headers: {"Authorization": `Bearer ${token}`}});
-			dispatch({ type: 'get_items', payload: response.data });
-			// // Get Current List from storage.
-			// var currentList = await getCurrentList();
-			
-			// if (currentList) {
-			// 	await AsyncStorage.setItem('list', JSON.stringify(response.data));
-			// 	dispatch({ type: 'get_items', payload: response.data });
-			// } 
-				// else if (currentList && response.data) {
-				// var comparedList = compareLists(currentList, response.data);
-				// // Load the changes into Local Storage.
-				// await AsyncStorage.setItem('list', JSON.stringify(comparedList));
-				// // Load the changes into State.
-				// dispatch({ type: 'get_items', payload: comparedList });
-				// }
-			// else {
-			// 	dispatch({ type: 'get_items', payload: currentList})
-			// }
+			debugger;
+			dataFlow(dispatch, response.data);
+			// dispatch({ type: 'get_items', payload: response.data });
 
 		} catch (error) {
 			console.log(error);
 			Sentry.captureException(error.response);
 		}
 	};
+}
+
+const dataFlow= (dispatch, data) => {
+	const complete   = [];
+	const incomplete = [];
+	const storeData  = [];
+
+	data.stores.map((store)=>{
+		// Create the Store Data object for the SectionList on Homescreen.
+		storeData.push({title: store.name, data: [store]});
+
+		store.items.map((item, location) => {
+			if (item.location === null) {
+				item.location = location;
+			}
+
+			if (item.complete) {
+				complete.push(item);
+			} else {
+				incomplete.push(item);
+			}
+		});
+	});
+
+	(function completeItems(){
+		dispatch({ type: 'complete_items', payload: complete });
+	})();
+
+	(function incompleteItems(){
+		dispatch({ type: 'incomplete_items', payload: incomplete });
+	})();
+
+	(function setStoreData(){
+		dispatch({ type: 'store_data', payload: storeData });
+	})();
+}
+
+const markComplete = dispatch => {
+	return (data) => {
+		debugger;
+		dispatch({ type: 'complete_items', payload: data });
+	}
+}
+
+const markIncomplete = dispatch => {
+	return () => {
+		dispatch({ type: 'incomplete_items', payload: incomplete });
+	}
+}
+
+const setStoreData = dispatch => {
+	return () => {
+		dispatch({ type: 'store_data', payload: storeData });
+	}
 }
 
 const addItem = dispatch => {
@@ -262,5 +223,5 @@ const newItem = dispatch => {
 export const { Context, Provider } = createDataContext(
 	itemReducer, 
 	{getItems, addItem, editItem, newItem, deleteItem, getLocalItems, setLocalItems}, 
-	[]
+	{}
 );
