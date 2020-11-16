@@ -154,6 +154,7 @@ const showCompletedButton =
 					{ state.complete && showCompleted ? 
 						<FlatList 
 							data={state.complete}
+							extraData={state.complete}
 							keyExtractor={(item) => item._id.$oid.toString()}
 							renderItem={({item}) => {
 								return (

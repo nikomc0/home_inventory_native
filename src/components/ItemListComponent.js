@@ -51,6 +51,7 @@ export default class ItemListComponent extends PureComponent {
 	      <DraggableFlatList
 	      	style={styles.listContainer}
 	        data={this.state.data}
+	        extraData={this.state.data}
 	        keyExtractor={(item, index) => `draggable-item-${item._id.$oid.toString()}`}
 	        renderItem={({ item, drag }) => {
 	        	return(
